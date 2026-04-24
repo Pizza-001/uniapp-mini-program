@@ -38,8 +38,21 @@
       "path": "pages/pharmacy/index",
       "style": {
         "navigationBarTitleText": "宠爱药房",
-        "navigationBarBackgroundColor": "#5C6BC0",
-        "navigationBarTextStyle": "white"
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/pharmacy/checkout",
+      "style": {
+        "navigationBarTitleText": "收银台",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/pharmacy/success",
+      "style": {
+        "navigationBarTitleText": "交易结果",
+        "navigationStyle": "custom"
       }
     },
     {
@@ -69,15 +82,16 @@
       "path": "pages/profile/index",
       "style": {
         "navigationBarTitleText": "个人中心",
-        "navigationStyle": "custom"
+        "navigationStyle": "custom",
+        "navigationBarTextStyle": "white",
+        "backgroundColorTop": "#1A237E"
       }
     },
     {
       "path": "pages/profile/recharge",
       "style": {
-        "navigationBarTitleText": "充值中心",
-        "navigationBarBackgroundColor": "#5C6BC0",
-        "navigationBarTextStyle": "white"
+        "navigationBarTitleText": "钱包中心",
+        "navigationStyle": "custom"
       }
     },
     {
@@ -148,6 +162,70 @@
       "style": {
         "navigationBarTitleText": "宠物档案",
         "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/pet/edit",
+      "style": {
+        "navigationBarTitleText": "编辑档案",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/points-mall/index",
+      "style": {
+        "navigationBarTitleText": "积分商城",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/profile/settings",
+      "style": {
+        "navigationBarTitleText": "系统设置",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/profile/edit",
+      "style": {
+        "navigationBarTitleText": "编辑资料",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/profile/bind-phone",
+      "style": {
+        "navigationBarTitleText": "绑定手机",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/profile/modify-password",
+      "style": {
+        "navigationBarTitleText": "修改密码",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/profile/verify",
+      "style": {
+        "navigationBarTitleText": "实名认证",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/profile/consumption",
+      "style": {
+        "navigationBarTitleText": "消费账单",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/profile/member-center",
+      "style": {
+        "navigationBarTitleText": "会员中心",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#FFFBF0"
       }
     }
   ],
