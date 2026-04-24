@@ -1,0 +1,165 @@
+/* ===== 宠爱之城 3.0 高级轻医疗设计系统升级 ===== */
+.page.data-v-3746ec96 {
+  background: #F4F7FC;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.tabs-wrap.data-v-3746ec96 {
+  background: #5C6BC0;
+  display: flex;
+  height: 90rpx;
+}
+.tabs-wrap .tab-item.data-v-3746ec96 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.tabs-wrap .tab-item text.data-v-3746ec96 {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.7);
+}
+.tabs-wrap .tab-item.active text.data-v-3746ec96 {
+  color: #fff;
+  font-weight: 700;
+}
+.tabs-wrap .tab-item.active .active-line.data-v-3746ec96 {
+  position: absolute;
+  bottom: 0;
+  width: 40rpx;
+  height: 6rpx;
+  background: #fff;
+  border-radius: 100rpx;
+}
+.scroll-content.data-v-3746ec96 {
+  flex: 1;
+  padding: 32rpx;
+}
+.card.data-v-3746ec96 {
+  background: #FFFFFF;
+  border-radius: 32rpx;
+  box-shadow: 0 8rpx 32rpx rgba(92, 107, 192, 0.08);
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.card.data-v-3746ec96:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(92, 107, 192, 0.04);
+}
+.doctor-list.data-v-3746ec96 {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+.doctor-card .doc-main.data-v-3746ec96 {
+  display: flex;
+  gap: 24rpx;
+  margin-bottom: 32rpx;
+}
+.doctor-card .doc-main .avatar.data-v-3746ec96 {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 20rpx;
+  background: #F4F7FC;
+}
+.doctor-card .doc-main .info.data-v-3746ec96 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.doctor-card .doc-main .info .name-row.data-v-3746ec96 {
+  display: flex;
+  align-items: baseline;
+  gap: 12rpx;
+}
+.doctor-card .doc-main .info .name-row .name.data-v-3746ec96 {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #1A1A1A;
+}
+.doctor-card .doc-main .info .name-row .title.data-v-3746ec96 {
+  font-size: 22rpx;
+  color: #5E6D82;
+}
+.doctor-card .doc-main .info .name-row .status-tag.data-v-3746ec96 {
+  font-size: 18rpx;
+  padding: 2rpx 12rpx;
+  border-radius: 100rpx;
+  margin-left: auto;
+}
+.doctor-card .doc-main .info .name-row .status-tag.online.data-v-3746ec96 {
+  background: rgba(102, 187, 106, 0.1);
+  color: #66BB6A;
+  border: 2rpx solid #66BB6A;
+}
+.doctor-card .doc-main .info .name-row .status-tag.busy.data-v-3746ec96 {
+  background: #eee;
+  color: #909399;
+  border: 2rpx solid #ddd;
+}
+.doctor-card .doc-main .info .dept.data-v-3746ec96 {
+  font-size: 24rpx;
+  color: #5E6D82;
+}
+.doctor-card .doc-main .info .stats.data-v-3746ec96 {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  font-size: 22rpx;
+}
+.doctor-card .doc-main .info .stats .rate.data-v-3746ec96 {
+  color: #FFB300;
+  font-weight: 600;
+}
+.doctor-card .doc-main .info .stats .divider.data-v-3746ec96 {
+  color: #eee;
+}
+.doctor-card .doc-main .info .stats .fee.data-v-3746ec96 {
+  color: #FF5252;
+  font-weight: 700;
+}
+.doctor-card .btn-book.data-v-3746ec96 {
+  background: linear-gradient(135deg, #64B5F6 0%, #42A5F5 100%);
+  color: #FFFFFF;
+  border-radius: 100rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+  height: 80rpx;
+  font-size: 28rpx;
+}
+.doctor-card .btn-book.data-v-3746ec96:active {
+  transform: scale(0.96);
+  opacity: 0.9;
+}
+.doctor-card .btn-book.disabled.data-v-3746ec96 {
+  background: #eee;
+  color: #909399;
+  box-shadow: none;
+}
+.empty-state.data-v-3746ec96 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 200rpx 0;
+}
+.empty-state .empty-img.data-v-3746ec96 {
+  width: 300rpx;
+  height: 300rpx;
+  margin-bottom: 40rpx;
+}
+.empty-state text.data-v-3746ec96 {
+  font-size: 26rpx;
+  color: #909399;
+}
+.safe-bottom.data-v-3746ec96 {
+  height: 160rpx;
+}

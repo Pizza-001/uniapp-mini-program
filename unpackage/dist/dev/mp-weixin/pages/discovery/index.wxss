@@ -1,0 +1,136 @@
+/* ===== 宠爱之城 3.0 高级轻医疗设计系统升级 ===== */
+.page.data-v-4548b25e {
+  background: #F4F7FC;
+  min-height: 100vh;
+}
+.header.data-v-4548b25e {
+  background: #F4F7FC;
+  padding: 20rpx 32rpx;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header .search-bar.data-v-4548b25e {
+  background: #fff;
+  border-radius: 100rpx;
+  padding: 18rpx 32rpx;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(92, 107, 192, 0.05);
+}
+.header .search-bar input.data-v-4548b25e {
+  flex: 1;
+  font-size: 26rpx;
+  color: #1A1A1A;
+}
+.scroll-content.data-v-4548b25e {
+  padding: 0 32rpx;
+}
+.category-tabs.data-v-4548b25e {
+  display: flex;
+  gap: 16rpx;
+  margin: 32rpx 0;
+}
+.category-tabs .tab-item.data-v-4548b25e {
+  padding: 12rpx 32rpx;
+  border-radius: 100rpx;
+  background: #fff;
+  font-size: 24rpx;
+  color: #5E6D82;
+  border: 2rpx solid transparent;
+  transition: all 0.2s;
+}
+.category-tabs .tab-item.active.data-v-4548b25e {
+  background: #E8EAF6;
+  color: #3F4B91;
+  border-color: #5C6BC0;
+  font-weight: 700;
+}
+.card.data-v-4548b25e {
+  background: #FFFFFF;
+  border-radius: 32rpx;
+  box-shadow: 0 8rpx 32rpx rgba(92, 107, 192, 0.08);
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  padding: 0;
+  overflow: hidden;
+}
+.card.data-v-4548b25e:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(92, 107, 192, 0.04);
+}
+.feed-list.data-v-4548b25e {
+  display: flex;
+  flex-direction: column;
+  gap: 32rpx;
+}
+.feed-list .feed-item .feed-cover-placeholder.data-v-4548b25e {
+  width: 100%;
+  height: 360rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+}
+.feed-list .feed-item .feed-info.data-v-4548b25e {
+  padding: 24rpx 32rpx;
+}
+.feed-list .feed-item .feed-info .tag-row.data-v-4548b25e {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+.feed-list .feed-item .feed-info .tag-row .tag.data-v-4548b25e {
+  font-size: 20rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 6rpx;
+  font-weight: 700;
+}
+.feed-list .feed-item .feed-info .tag-row .tag.wiki.data-v-4548b25e {
+  background: #E3F2FD;
+  color: #1976D2;
+}
+.feed-list .feed-item .feed-info .tag-row .tag.activity.data-v-4548b25e {
+  background: #FFF3E0;
+  color: #F57C00;
+}
+.feed-list .feed-item .feed-info .tag-row .tag.service.data-v-4548b25e {
+  background: #E8F5E9;
+  color: #388E3C;
+}
+.feed-list .feed-item .feed-info .tag-row .tag.know.data-v-4548b25e {
+  background: #F3E5F5;
+  color: #7B1FA2;
+}
+.feed-list .feed-item .feed-info .tag-row .source.data-v-4548b25e {
+  font-size: 20rpx;
+  color: #909399;
+}
+.feed-list .feed-item .feed-info .feed-title.data-v-4548b25e {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1A1A1A;
+  line-height: 1.5;
+  display: block;
+  margin-bottom: 24rpx;
+}
+.feed-list .feed-item .feed-info .feed-footer.data-v-4548b25e {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.feed-list .feed-item .feed-info .feed-footer .stats.data-v-4548b25e {
+  display: flex;
+  gap: 24rpx;
+}
+.feed-list .feed-item .feed-info .feed-footer .stats .stat.data-v-4548b25e {
+  font-size: 22rpx;
+  color: #909399;
+}
+.safe-bottom.data-v-4548b25e {
+  height: 160rpx;
+}

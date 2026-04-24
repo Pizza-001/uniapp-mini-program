@@ -1,0 +1,259 @@
+/* ===== 宠爱之城 3.0 高级轻医疗设计系统升级 ===== */
+.page.data-v-58687a97 {
+  background: #F4F7FC;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.pharmacy-header.data-v-58687a97 {
+  background: linear-gradient(135deg, #7986CB 0%, #5C6BC0 100%);
+  padding: 20rpx 40rpx 40rpx;
+}
+.pharmacy-header .header-content .title.data-v-58687a97 {
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 30rpx;
+  display: block;
+}
+.pharmacy-header .header-content .search-bar.data-v-58687a97 {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20rpx);
+  -webkit-backdrop-filter: blur(20rpx);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  height: 80rpx;
+  border-radius: 20rpx;
+  padding: 0 30rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+.pharmacy-header .header-content .search-bar input.data-v-58687a97 {
+  flex: 1;
+  font-size: 26rpx;
+  color: #fff;
+}
+.main-body.data-v-58687a97 {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+.sidebar.data-v-58687a97 {
+  width: 170rpx;
+  background: rgba(92, 107, 192, 0.03);
+}
+.sidebar .sidebar-item.data-v-58687a97 {
+  height: 120rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.sidebar .sidebar-item text.data-v-58687a97 {
+  font-size: 26rpx;
+  color: #5E6D82;
+  transition: all 0.3s;
+}
+.sidebar .sidebar-item.active.data-v-58687a97 {
+  background: #fff;
+}
+.sidebar .sidebar-item.active text.data-v-58687a97 {
+  color: #5C6BC0;
+  font-weight: 800;
+  transform: scale(1.1);
+}
+.sidebar .sidebar-item.active .indicator.data-v-58687a97 {
+  position: absolute;
+  left: 0;
+  width: 8rpx;
+  height: 40rpx;
+  background: #5C6BC0;
+  border-radius: 0 4rpx 4rpx 0;
+}
+.product-view.data-v-58687a97 {
+  flex: 1;
+  padding: 30rpx;
+}
+.card.data-v-58687a97 {
+  background: #FFFFFF;
+  border-radius: 32rpx;
+  box-shadow: 0 8rpx 32rpx rgba(92, 107, 192, 0.08);
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.card.data-v-58687a97:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(92, 107, 192, 0.04);
+}
+.category-banner.data-v-58687a97 {
+  background: linear-gradient(135deg, #E8EAF6, #fff);
+  padding: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.category-banner .b-title.data-v-58687a97 {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #3F4B91;
+  display: block;
+}
+.category-banner .b-subtitle.data-v-58687a97 {
+  font-size: 20rpx;
+  color: #5E6D82;
+}
+.category-banner .banner-img.data-v-58687a97 {
+  width: 100rpx;
+  height: 100rpx;
+  opacity: 0.6;
+}
+.product-grid.data-v-58687a97 {
+  display: flex;
+  flex-direction: column;
+  gap: 30rpx;
+}
+.product-card.data-v-58687a97 {
+  display: flex;
+  gap: 30rpx;
+  padding: 24rpx;
+}
+.product-card .image-area.data-v-58687a97 {
+  width: 180rpx;
+  height: 180rpx;
+  background: #F4F7FC;
+  border-radius: 24rpx;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.product-card .image-area .p-placeholder.data-v-58687a97 {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.product-card .image-area .rx-tag.data-v-58687a97 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #FF5252;
+  color: #fff;
+  font-size: 16rpx;
+  font-weight: 700;
+  padding: 4rpx 12rpx;
+  border-radius: 0 0 16rpx 0;
+}
+.product-card .detail-area.data-v-58687a97 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.product-card .detail-area .p-name.data-v-58687a97 {
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #1A1A1A;
+  margin-bottom: 8rpx;
+}
+.product-card .detail-area .p-desc.data-v-58687a97 {
+  font-size: 22rpx;
+  color: #909399;
+  margin-bottom: 20rpx;
+}
+.product-card .detail-area .price-row.data-v-58687a97 {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.product-card .detail-area .price-row .price-box.data-v-58687a97 {
+  display: flex;
+  align-items: baseline;
+  color: #FF5252;
+}
+.product-card .detail-area .price-row .price-box .unit.data-v-58687a97 {
+  font-size: 20rpx;
+  font-weight: 700;
+}
+.product-card .detail-area .price-row .price-box .num.data-v-58687a97 {
+  font-size: 36rpx;
+  font-weight: 900;
+}
+.float-cart-wrap.data-v-58687a97 {
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom) + 120rpx);
+  left: 40rpx;
+  right: 40rpx;
+  z-index: 99;
+}
+.float-cart-wrap .float-cart.data-v-58687a97 {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20rpx);
+  -webkit-backdrop-filter: blur(20rpx);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  height: 110rpx;
+  border-radius: 100rpx;
+  padding: 0 10rpx 0 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 20rpx 40rpx rgba(0, 0, 0, 0.1);
+}
+.float-cart-wrap .float-cart .cart-left.data-v-58687a97 {
+  display: flex;
+  align-items: center;
+  gap: 30rpx;
+}
+.float-cart-wrap .float-cart .cart-left .cart-icon.data-v-58687a97 {
+  position: relative;
+}
+.float-cart-wrap .float-cart .cart-left .cart-icon .count-badge.data-v-58687a97 {
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  background: #FF5252;
+  color: #fff;
+  font-size: 18rpx;
+  min-width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid #fff;
+}
+.float-cart-wrap .float-cart .cart-left .total-box.data-v-58687a97 {
+  display: flex;
+  flex-direction: column;
+}
+.float-cart-wrap .float-cart .cart-left .total-box .label.data-v-58687a97 {
+  font-size: 20rpx;
+  color: #909399;
+}
+.float-cart-wrap .float-cart .cart-left .total-box .price.data-v-58687a97 {
+  font-size: 36rpx;
+  font-weight: 900;
+  color: #3F4B91;
+}
+.float-cart-wrap .float-cart .checkout-btn.data-v-58687a97 {
+  background: linear-gradient(135deg, #7986CB 0%, #5C6BC0 100%);
+  color: #FFFFFF;
+  border-radius: 100rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+  height: 90rpx;
+  padding: 0 50rpx;
+  font-size: 30rpx;
+}
+.float-cart-wrap .float-cart .checkout-btn.data-v-58687a97:active {
+  transform: scale(0.96);
+  opacity: 0.9;
+}
+.safe-bottom.data-v-58687a97 {
+  height: 200rpx;
+}

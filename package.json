@@ -1,0 +1,21 @@
+{
+  "name": "pet-love-city-3",
+  "version": "1.0.0",
+  "description": "宠爱之城 HIS 小程序 3.0",
+  "scripts": {
+    "dev:mp-weixin": "uni",
+    "build:mp-weixin": "uni build"
+  },
+  "dependencies": {
+    "@dcloudio/uni-app": "3.0.0-alpha-5000820260420001",
+    "@dcloudio/uni-ui": "1.5.12",
+    "vue": "^3.3.4",
+    "pinia": "^2.1.6"
+  },
+  "devDependencies": {
+    "@dcloudio/uni-cli-shared": "3.0.0-alpha-5000820260420001",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "sass": "^1.63.6",
+    "sass-loader": "^13.3.2"
+  }
+}

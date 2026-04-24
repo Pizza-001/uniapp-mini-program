@@ -1,0 +1,141 @@
+/* ===== 宠爱之城 3.0 高级轻医疗设计系统升级 ===== */
+.page.data-v-d08ef7d4 {
+  padding: 80rpx 60rpx;
+  background: #F8FAFC;
+  min-height: 100vh;
+}
+.login-header.data-v-d08ef7d4 {
+  margin-bottom: 80rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.login-header .logo.data-v-d08ef7d4 {
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: 40rpx;
+  border-radius: 24rpx;
+}
+.login-header .title.data-v-d08ef7d4 {
+  font-size: 48rpx;
+  font-weight: 800;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+.login-header .subtitle.data-v-d08ef7d4 {
+  font-size: 26rpx;
+  color: #999;
+}
+.login-form .input-item.data-v-d08ef7d4 {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx 32rpx;
+  margin-bottom: 32rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.02);
+}
+.login-form .input-item input.data-v-d08ef7d4 {
+  flex: 1;
+  margin-left: 20rpx;
+  font-size: 28rpx;
+}
+.login-form .captcha-item.data-v-d08ef7d4 {
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+.login-form .captcha-item .captcha-input-wrap.data-v-d08ef7d4 {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx 32rpx;
+  margin-right: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.02);
+}
+.login-form .captcha-item .captcha-img.data-v-d08ef7d4 {
+  width: 200rpx;
+  height: 90rpx;
+  border-radius: 12rpx;
+}
+.login-form .btn-login.data-v-d08ef7d4 {
+  background: linear-gradient(135deg, #5C6BC0, #7986CB);
+  color: #fff;
+  height: 100rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50rpx;
+  margin-top: 60rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  box-shadow: 0 8rpx 20rpx rgba(92, 107, 192, 0.2);
+}
+.login-form .footer-links.data-v-d08ef7d4 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40rpx;
+}
+.login-form .footer-links .link.data-v-d08ef7d4 {
+  font-size: 26rpx;
+  color: #5C6BC0;
+  font-weight: 600;
+}
+.login-form .footer-links .divider.data-v-d08ef7d4 {
+  margin: 0 20rpx;
+  color: #eee;
+}
+.login-form .agreement-row.data-v-d08ef7d4 {
+  margin-top: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-form .agreement-row .agreement-text.data-v-d08ef7d4 {
+  font-size: 22rpx;
+  color: #999;
+}
+.login-form .agreement-row .link-text.data-v-d08ef7d4 {
+  color: #5C6BC0;
+}
+.third-party.data-v-d08ef7d4 {
+  margin-top: 120rpx;
+}
+.third-party .divider-row.data-v-d08ef7d4 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20rpx;
+  margin-bottom: 40rpx;
+}
+.third-party .divider-row .line.data-v-d08ef7d4 {
+  flex: 1;
+  height: 1rpx;
+  background: #E0E4E8;
+}
+.third-party .divider-row .divider-text.data-v-d08ef7d4 {
+  font-size: 22rpx;
+  color: #B2BEC3;
+}
+.third-party .platform-list.data-v-d08ef7d4 {
+  display: flex;
+  justify-content: center;
+  gap: 100rpx;
+}
+.third-party .platform-list .platform-item.data-v-d08ef7d4 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+}
+.third-party .platform-list .platform-item .p-icon.data-v-d08ef7d4 {
+  width: 80rpx;
+  height: 80rpx;
+}
+.third-party .platform-list .platform-item text.data-v-d08ef7d4 {
+  font-size: 24rpx;
+  color: #999;
+}

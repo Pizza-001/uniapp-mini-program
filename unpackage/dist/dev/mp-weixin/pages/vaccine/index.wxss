@@ -1,0 +1,141 @@
+/* ===== 宠爱之城 3.0 高级轻医疗设计系统升级 ===== */
+.vaccine-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 30rpx;
+}
+.header {
+  padding: 40rpx 0;
+}
+.header .title-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+.header .title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+}
+.header .badge {
+  font-size: 20rpx;
+  color: #fff;
+  background-color: #4CAF50;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  margin-left: 20rpx;
+}
+.header .subtitle {
+  font-size: 26rpx;
+  color: #999;
+}
+.card {
+  background-color: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.03);
+  margin-bottom: 30rpx;
+}
+.vaccine-list .vaccine-card {
+  padding: 30rpx;
+}
+.vaccine-list .vaccine-card .card-body {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 30rpx;
+}
+.vaccine-list .vaccine-card .card-body .v-icon {
+  width: 100rpx;
+  height: 100rpx;
+  background-color: #E3F2FD;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vaccine-list .vaccine-card .card-body .v-info {
+  flex: 1;
+  margin-left: 24rpx;
+}
+.vaccine-list .vaccine-card .card-body .v-info .v-name {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+.vaccine-list .vaccine-card .card-body .v-info .v-desc {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 16rpx;
+}
+.vaccine-list .vaccine-card .card-body .v-info .v-tags {
+  display: flex;
+  gap: 12rpx;
+}
+.vaccine-list .vaccine-card .card-body .v-info .v-tags .tag {
+  font-size: 20rpx;
+  color: #42A5F5;
+  background-color: #E3F2FD;
+  padding: 4rpx 12rpx;
+  border-radius: 4rpx;
+}
+.vaccine-list .vaccine-card .card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 24rpx;
+  border-top: 2rpx solid #f5f5f5;
+}
+.vaccine-list .vaccine-card .card-footer .price-row .currency {
+  font-size: 24rpx;
+  color: #FF7043;
+  font-weight: bold;
+}
+.vaccine-list .vaccine-card .card-footer .price-row .price {
+  font-size: 40rpx;
+  color: #FF7043;
+  font-weight: bold;
+  margin: 0 4rpx;
+}
+.vaccine-list .vaccine-card .card-footer .price-row .unit {
+  font-size: 24rpx;
+  color: #999;
+}
+.vaccine-list .vaccine-card .card-footer .book-btn {
+  width: 180rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  background: linear-gradient(to right, #42A5F5, #64B5F6);
+  color: #fff;
+  font-size: 26rpx;
+  border-radius: 32rpx;
+  margin: 0;
+  border: none;
+}
+.vaccine-list .vaccine-card .card-footer .book-btn::after {
+  border: none;
+}
+.tips-section {
+  padding: 30rpx;
+}
+.tips-section .tips-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.tips-section .tips-header .tips-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-left: 10rpx;
+}
+.tips-section .tips-content .tip-item {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 10rpx;
+}
+.footer-spacing {
+  height: 40rpx;
+}

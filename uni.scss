@@ -1,0 +1,77 @@
+/* ===== 宠爱之城 3.0 高级轻医疗设计系统升级 ===== */
+
+// 品牌核心色 (使用更精致的 HSL 配色)
+$primary: #5C6BC0;        // 雅致深紫
+$primary-dark: #3F4B91;   // 深色调紫
+$primary-light: #E8EAF6;  // 背景淡紫
+$primary-grad: linear-gradient(135deg, #7986CB 0%, #5C6BC0 100%); 
+$blue-grad: linear-gradient(135deg, #64B5F6 0%, #42A5F5 100%);
+
+// 辅助色
+$secondary: #42A5F5;     
+$accent: #FF5252;        
+$success: #66BB6A;       
+$warning: #FFB300;       
+
+// 背景色
+$bg-main: #F4F7FC;       
+$bg-card: #FFFFFF;       
+
+// 文字颜色
+$text-main: #1A1A1A;     
+$text-sub: #5E6D82;      
+$text-hint: #909399;     
+
+// 高级阴影
+$shadow-sm: 0 4rpx 12rpx rgba(92, 107, 192, 0.04);
+$shadow-md: 0 8rpx 32rpx rgba(92, 107, 192, 0.08);
+$shadow-lg: 0 16rpx 48rpx rgba(92, 107, 192, 0.12);
+
+// 玻璃拟态 Mixin
+@mixin glass-morphism {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20rpx);
+  -webkit-backdrop-filter: blur(20rpx);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+// 卡片 Mixin
+@mixin premium-card {
+  background: $bg-card;
+  border-radius: 32rpx;
+  box-shadow: $shadow-md;
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  &:active {
+    transform: translateY(2rpx);
+    box-shadow: $shadow-sm;
+  }
+}
+
+// 兼容旧名称的别名
+@mixin card-style {
+  @include premium-card;
+}
+
+// 按钮 Mixin
+@mixin action-button($grad) {
+  background: $grad;
+  color: #FFFFFF;
+  border-radius: 100rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.1);
+  transition: all 0.2s;
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+  }
+}
+
+// 品牌主色按钮别名
+@mixin btn-primary {
+  @include action-button($blue-grad);
+}

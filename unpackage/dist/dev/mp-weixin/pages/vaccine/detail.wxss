@@ -1,0 +1,226 @@
+/* ===== 宠爱之城 3.0 高级轻医疗设计系统升级 ===== */
+.page.data-v-0719c8ff {
+  background: #F5F5F5;
+  min-height: 100vh;
+}
+.header-img-wrap.data-v-0719c8ff {
+  position: relative;
+  height: 400rpx;
+}
+.header-img-wrap .header-bg.data-v-0719c8ff {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #FF8A65, #E64A19);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.header-img-wrap .header-bg .header-emoji.data-v-0719c8ff {
+  font-size: 160rpx;
+}
+.header-img-wrap .header-overlay.data-v-0719c8ff {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding-top: var(--status-bar-height);
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  padding-left: 32rpx;
+}
+.header-img-wrap .header-overlay .back-btn.data-v-0719c8ff {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.2);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.detail-body.data-v-0719c8ff {
+  padding: 24rpx;
+  margin-top: -40rpx;
+}
+.info-card.data-v-0719c8ff {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.08);
+}
+.info-card .info-top.data-v-0719c8ff {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+.info-card .info-top .vaccine-name.data-v-0719c8ff {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #333;
+}
+.info-card .info-top .price-badge.data-v-0719c8ff {
+  background: linear-gradient(135deg, #FF8A65, #E64A19);
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 800;
+  padding: 10rpx 28rpx;
+  border-radius: 100rpx;
+}
+.info-card .vaccine-sub.data-v-0719c8ff {
+  font-size: 26rpx;
+  color: #999;
+  display: block;
+  margin-bottom: 20rpx;
+}
+.info-card .diseases-row.data-v-0719c8ff {
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+  margin-bottom: 24rpx;
+  flex-wrap: wrap;
+}
+.info-card .diseases-row .d-label.data-v-0719c8ff {
+  font-size: 26rpx;
+  color: #555;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.info-card .diseases-row .disease-tags.data-v-0719c8ff {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+.info-card .diseases-row .dtag.data-v-0719c8ff {
+  background: rgba(255, 112, 67, 0.1);
+  color: #FF7043;
+  font-size: 20rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 100rpx;
+}
+.info-card .meta-grid.data-v-0719c8ff {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16rpx;
+  background: #FFF8F5;
+  border-radius: 16rpx;
+  padding: 20rpx;
+}
+.info-card .mg-item.data-v-0719c8ff {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.info-card .mg-item .mg-label.data-v-0719c8ff {
+  font-size: 22rpx;
+  color: #999;
+}
+.info-card .mg-item .mg-val.data-v-0719c8ff {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #333;
+}
+.section-card.data-v-0719c8ff {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+}
+.section-card .section-head.data-v-0719c8ff {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+  display: block;
+  margin-bottom: 24rpx;
+  padding-left: 16rpx;
+  border-left: 6rpx solid #FF7043;
+}
+.section-card .desc-item.data-v-0719c8ff {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 14rpx;
+}
+.section-card .desc-item .desc-dot.data-v-0719c8ff {
+  color: #FF7043;
+  font-size: 28rpx;
+}
+.section-card .desc-item .desc-text.data-v-0719c8ff {
+  font-size: 26rpx;
+  color: #555;
+  line-height: 1.6;
+}
+.steps.data-v-0719c8ff {
+  display: flex;
+  flex-direction: column;
+}
+.step.data-v-0719c8ff {
+  display: flex;
+  align-items: flex-start;
+  gap: 20rpx;
+  position: relative;
+  padding-bottom: 32rpx;
+}
+.step .step-circle.data-v-0719c8ff {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF8A65, #E64A19);
+  color: #fff;
+  font-size: 26rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.step .step-line.data-v-0719c8ff {
+  position: absolute;
+  left: 28rpx;
+  top: 56rpx;
+  width: 2rpx;
+  height: calc(100% - 56rpx);
+  background: linear-gradient(180deg, #FF7043, transparent);
+}
+.step .step-content.data-v-0719c8ff {
+  flex: 1;
+  padding-top: 8rpx;
+}
+.step .step-content .step-title.data-v-0719c8ff {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #333;
+  display: block;
+  margin-bottom: 6rpx;
+}
+.step .step-content .step-desc.data-v-0719c8ff {
+  font-size: 24rpx;
+  color: #999;
+  display: block;
+}
+.safe-bottom.data-v-0719c8ff {
+  height: 160rpx;
+}
+.bottom-bar.data-v-0719c8ff {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 32rpx calc(env(safe-area-inset-bottom) + 20rpx);
+  background: #fff;
+  box-shadow: 0 -4rpx 24rpx rgba(0, 0, 0, 0.06);
+}
+.bottom-bar .btn-confirm.data-v-0719c8ff {
+  height: 96rpx;
+  border-radius: 100rpx;
+  background: linear-gradient(135deg, #FF8A65, #E64A19);
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(255, 112, 67, 0.4);
+}

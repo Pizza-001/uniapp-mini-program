@@ -1,0 +1,126 @@
+/* ===== 宠爱之城 3.0 高级轻医疗设计系统升级 ===== */
+.knowledge-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
+}
+.header {
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+}
+.header .search-box {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 16rpx 30rpx;
+  border-radius: 40rpx;
+}
+.header .search-box .input {
+  flex: 1;
+  margin-left: 16rpx;
+  font-size: 26rpx;
+}
+.category-scroll {
+  background-color: #fff;
+  white-space: nowrap;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #eee;
+}
+.category-scroll .category-item {
+  display: inline-block;
+  padding: 10rpx 40rpx;
+  font-size: 28rpx;
+  color: #666;
+  position: relative;
+}
+.category-scroll .category-item.active {
+  color: #FF7043;
+  font-weight: bold;
+}
+.category-scroll .category-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -10rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30rpx;
+  height: 6rpx;
+  background-color: #FF7043;
+  border-radius: 3rpx;
+}
+.list-scroll {
+  flex: 1;
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+.article-card {
+  display: flex;
+  background-color: #fff;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.02);
+}
+.article-card .cover {
+  width: 220rpx;
+  height: 180rpx;
+  border-radius: 16rpx;
+  background-color: #eee;
+}
+.article-card .info {
+  flex: 1;
+  margin-left: 24rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.article-card .info .title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.article-card .info .summary {
+  font-size: 24rpx;
+  color: #999;
+  margin: 10rpx 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+.article-card .info .meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.article-card .info .meta .category-tag {
+  font-size: 20rpx;
+  color: #FF7043;
+  background-color: #FFF3E0;
+  padding: 4rpx 12rpx;
+  border-radius: 4rpx;
+}
+.article-card .info .meta .stats {
+  display: flex;
+  align-items: center;
+}
+.article-card .info .meta .stats .stat-text {
+  font-size: 20rpx;
+  color: #999;
+  margin-left: 6rpx;
+}
+.loading-status {
+  text-align: center;
+  padding: 30rpx 0;
+  font-size: 24rpx;
+  color: #999;
+}
+.footer-spacing {
+  height: 40rpx;
+}

@@ -1,0 +1,64 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/index",
+    "pages/register/index",
+    "pages/discovery/index",
+    "pages/pharmacy/index",
+    "pages/appointment/index",
+    "pages/appointment/detail",
+    "pages/profile/index",
+    "pages/record/index",
+    "pages/record/detail",
+    "pages/knowledge/index",
+    "pages/knowledge/detail",
+    "pages/ai/index",
+    "pages/vaccine/index",
+    "pages/vaccine/detail"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "宠爱之城 HIS",
+    "navigationBarBackgroundColor": "#F8FAFC",
+    "backgroundColor": "#F8FAFC"
+  },
+  "tabBar": {
+    "color": "#B2BEC3",
+    "selectedColor": "#5C6BC0",
+    "borderStyle": "white",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/icons/home.png",
+        "selectedIconPath": "static/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/discovery/index",
+        "text": "发现",
+        "iconPath": "static/icons/record.png",
+        "selectedIconPath": "static/icons/record-active.png"
+      },
+      {
+        "pagePath": "pages/pharmacy/index",
+        "text": "购药",
+        "iconPath": "static/icons/record.png",
+        "selectedIconPath": "static/icons/record-active.png"
+      },
+      {
+        "pagePath": "pages/appointment/index",
+        "text": "预约",
+        "iconPath": "static/icons/record.png",
+        "selectedIconPath": "static/icons/record-active.png"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的",
+        "iconPath": "static/icons/profile.png",
+        "selectedIconPath": "static/icons/profile-active.png"
+      }
+    ]
+  },
+  "usingComponents": {}
+}
