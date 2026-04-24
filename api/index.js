@@ -76,14 +76,30 @@ export const authApi = {
 
 // 用户模块
 export const userApi = {
-  getInfo: () => request({ url: '/getInfo' }),
-  getProfile: () => request({ url: '/system/user/profile' })
+  getInfo: () => request({ url: `/getInfo?t=${new Date().getTime()}` }),
+  getProfile: () => request({ url: `/system/user/profile?t=${new Date().getTime()}` }),
+  updateProfile: (data) => request({ url: '/system/user/profile', method: 'PUT', data }),
+  verifyRealName: (data) => request({ url: '/system/user/profile/verify', method: 'PUT', data }),
+  uploadAvatar: (filePath) => {
+    return new Promise((resolve, reject) => {
+      const token = uni.getStorageSync('token')
+      uni.uploadFile({
+        url: BASE_URL + '/system/user/profile/avatar',
+        filePath: filePath,
+        name: 'avatarfile',
+        header: { 'Authorization': 'Bearer ' + token },
+        success: (res) => resolve(JSON.parse(res.data)),
+        fail: (err) => reject(err)
+      })
+    })
+  }
 }
 
 // 会员与资金模块
 export const memberApi = {
   getMemberInfo: () => request({ url: '/hospital/member/info' }),
-  recharge: (data) => request({ url: '/hospital/member/recharge', method: 'POST', data })
+  recharge: (data) => request({ url: '/hospital/member/recharge', method: 'POST', data }),
+  getPointsRecords: () => request({ url: '/hospital/member/pointsRecords' })
 }
 
 // 医院业务模块
@@ -108,12 +124,42 @@ export const discoveryApi = {
 
 // 药房模块
 export const pharmacyApi = {
-  getCategories: () => request({ url: '/pharmacy/categories' }),
-  getProducts: (params) => request({ url: '/pharmacy/products', data: params })
+  getCategories: () => request({ url: '/hospital/medicine/categories' }),
+  getProducts: (params) => request({ url: '/hospital/medicine/list', data: params }),
+  getDetail: (id) => request({ url: `/hospital/medicine/${id}` })
+}
+
+// 医疗记录模块
+export const recordApi = {
+  getMyRecords: () => request({ url: '/hospital/record/myRecord' })
+}
+
+// 结算与支付模块
+export const billingApi = {
+  createBilling: (data) => request({ url: '/hospital/billing', method: 'POST', data }),
+  getCoupons: () => request({ url: '/hospital/billing/myCoupons' }),
+  getMyPending: () => request({ url: '/hospital/billing/myPending' }),
+  payBill: (id) => request({ url: `/hospital/billing/pay/${id}`, method: 'POST' }),
+  settle: (data) => request({ url: '/hospital/billing/settle', method: 'POST', data }),
+  getHistory: (params) => request({ url: '/hospital/billing/list', data: params }),
+  getDetail: (id) => request({ url: `/hospital/billing/${id}` })
 }
 
 // 预约模块
 export const apptApi = {
   getDoctors: (params) => request({ url: '/hospital/doctor/list', data: params }),
   submitOrder: (data) => request({ url: '/hospital/reservation', method: 'POST', data })
+}
+
+// AI 模块
+export const aiApi = {
+  // SSE 流式对话接口通常直接使用 uni.request，这里定义基础路径
+  chatSse: (memoryId, message) => `/ai/chat/sse?memoryId=${memoryId}&message=${encodeURIComponent(message)}`
+}
+
+// 积分商城模块
+export const pointsMallApi = {
+  getProducts: (params) => request({ url: '/hospital/points-mall/list', data: params }),
+  exchange: (productId) => request({ url: `/hospital/points-mall/exchange/${productId}`, method: 'POST' }),
+  getRecords: () => request({ url: '/hospital/points-mall/exchange/list' })
 }

@@ -1,7 +1,10 @@
 <template>
   <view class="container">
     <view class="header-card">
-      <text class="title">我的收藏</text>
+      <view class="title-row">
+        <text class="title">我的收藏</text>
+        <view class="clear-btn" v-if="list.length > 0" @tap="clearAll">清空全部</view>
+      </view>
       <text class="subtitle">共 {{ list.length }} 篇心爱内容</text>
     </view>
 
@@ -64,6 +67,22 @@ const removeFav = (index) => {
   })
 }
 
+const clearAll = () => {
+  uni.showModal({
+    title: '危险操作',
+    content: '确定要清空所有收藏内容吗？此操作不可撤销。',
+    confirmColor: '#EE5253',
+    success: (res) => {
+      if (res.confirm) {
+        list.value = []
+        uni.setStorageSync('my_fav_list', [])
+        uni.setStorageSync('my_fav_ids', [])
+        uni.showToast({ title: '已全部清空', icon: 'success' })
+      }
+    }
+  })
+}
+
 const handleNav = (url) => uni.navigateTo({ url })
 
 onMounted(() => {
@@ -79,10 +98,15 @@ onMounted(() => {
 .header-card {
   background: linear-gradient(135deg, #FF7675 0%, #EE5253 100%);
   padding: 80rpx 40rpx;
-  display: flex; flex-direction: column; gap: 12rpx;
-  border-bottom-left-radius: 60rpx;
-  border-bottom-right-radius: 60rpx;
-  .title { color: #fff; font-size: 44rpx; font-weight: 900; }
+  .title-row {
+    display: flex; justify-content: space-between; align-items: center;
+    .title { color: #fff; font-size: 44rpx; font-weight: 900; }
+    .clear-btn { 
+      font-size: 22rpx; color: #fff; padding: 10rpx 24rpx; 
+      background: rgba(255,255,255,0.2); border-radius: 100rpx;
+      backdrop-filter: blur(5px); border: 2rpx solid rgba(255,255,255,0.3);
+    }
+  }
   .subtitle { color: rgba(255,255,255,0.7); font-size: 24rpx; }
 }
 

@@ -59,7 +59,7 @@
             <view class="price-box">
               <text class="label">挂号费</text>
               <text class="unit">¥</text>
-              <text class="price">{{ doc.fee || 0 }}</text>
+              <text class="price">{{ doc.fee != null ? doc.fee : 50 }}</text>
             </view>
             <view 
               class="btn-book" 
@@ -73,22 +73,65 @@
         </view>
       </view>
 
-      <!-- 待缴费单 (空状态) -->
-      <view v-if="activeTab === 1" class="empty-view">
-        <view class="empty-card">
-           <image src="/static/images/empty-wallet.png" mode="widthFix" class="empty-img" />
-           <text class="empty-text">当前暂无待缴费项目</text>
-           <button class="empty-btn" @tap="activeTab = 0">去预约</button>
+      <!-- 待缴费单 -->
+      <view v-if="activeTab === 1" class="order-list">
+        <view class="order-card animate-in" v-for="item in pendingBills" :key="item.id">
+          <view class="o-header">
+            <text class="o-type">{{ formatBusinessType(item.businessType) }}</text>
+            <text class="o-no">#{{ item.orderNo }}</text>
+          </view>
+          <view class="o-body">
+            <view class="o-info">
+              <text class="o-remark">{{ item.remark }}</text>
+              <text class="o-time">{{ item.createTime }}</text>
+            </view>
+            <view class="o-price">
+              <text class="u">¥</text>
+              <text class="p">{{ item.totalAmount }}</text>
+            </view>
+          </view>
+          <view class="o-footer">
+            <button class="pay-btn" @tap="handlePay(item)">立即支付</button>
+          </view>
+        </view>
+        <view v-if="pendingBills.length === 0" class="empty-view">
+          <view class="empty-card">
+             <image src="/static/images/empty-wallet.png" mode="widthFix" class="empty-img" />
+             <text class="empty-text">当前暂无待缴费项目</text>
+             <button class="empty-btn" @tap="activeTab = 0">去预约</button>
+          </view>
         </view>
       </view>
 
-      <!-- 历史记录 (空状态) -->
-      <view v-if="activeTab === 2" class="empty-view">
-         <view class="empty-card">
-           <image src="/static/images/empty-history.png" mode="widthFix" class="empty-img" />
-           <text class="empty-text">还没就诊记录，去看看名医吧</text>
-           <button class="empty-btn" @tap="activeTab = 0">立即预约</button>
-         </view>
+      <!-- 历史记录 -->
+      <view v-if="activeTab === 2" class="history-list">
+        <view class="history-card animate-in" v-for="rec in historyList" :key="rec.recordId">
+           <view class="h-top">
+             <text class="h-type">{{ rec.visitType || '专家门诊' }}</text>
+             <text class="h-time">{{ rec.visitTime }}</text>
+           </view>
+           <view class="h-content">
+             <view class="h-item">
+               <text class="l">就诊宠物</text>
+               <text class="v">{{ rec.petName || '宠物助手' }}</text>
+             </view>
+             <view class="h-item">
+               <text class="l">主诊医师</text>
+               <text class="v">{{ rec.doctorName || '特邀专家' }}</text>
+             </view>
+             <view class="h-diag">
+               <text class="l">诊断结论</text>
+               <text class="v">{{ rec.assessment || '常规检查，状态良好' }}</text>
+             </view>
+           </view>
+        </view>
+        <view v-if="historyList.length === 0" class="empty-view">
+           <view class="empty-card">
+             <image src="/static/images/empty-history.png" mode="widthFix" class="empty-img" />
+             <text class="empty-text">还没就诊记录，去看看名医吧</text>
+             <button class="empty-btn" @tap="activeTab = 0">立即预约</button>
+           </view>
+        </view>
       </view>
 
       <view class="safe-bottom" />
@@ -97,13 +140,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { apptApi, formatImageUrl } from '@/api/index.js'
+import { ref, onMounted, watch } from 'vue'
+import { apptApi, billingApi, recordApi, formatImageUrl } from '@/api/index.js'
+import { onShow } from '@dcloudio/uni-app'
 
 const statusBarHeight = ref(0)
 const activeTab = ref(0)
 const tabs = ['专家名医', '待缴单据', '历史就诊']
 const doctors = ref([])
+const pendingBills = ref([])
+const historyList = ref([])
+
+const fetchData = () => {
+  if (activeTab.value === 0) fetchDoctors()
+  else if (activeTab.value === 1) fetchPendingBills()
+  else if (activeTab.value === 2) fetchHistory()
+}
+
+watch(activeTab, () => fetchData())
 
 const fetchDoctors = async () => {
   try {
@@ -112,6 +166,48 @@ const fetchDoctors = async () => {
   } catch (e) {
     console.error('获取医生列表失败', e)
   }
+}
+
+const fetchPendingBills = async () => {
+  try {
+    const res = await billingApi.getMyPending()
+    pendingBills.value = res.data || []
+  } catch (e) {}
+}
+
+const fetchHistory = async () => {
+  try {
+    const res = await recordApi.getMyRecords()
+    historyList.value = res.data || []
+  } catch (e) {}
+}
+
+const formatBusinessType = (type) => {
+  const map = { 'CLINIC': '门诊缴费', 'VACCINE': '疫苗费用', 'MEDICINE': '药房结算' }
+  return map[type] || '其他费用'
+}
+
+const handlePay = (item) => {
+  uni.showModal({
+    title: '支付确认',
+    content: `准备支付 ${item.totalAmount} 元，将从账户余额扣除。`,
+    success: async (res) => {
+      if (res.confirm) {
+        uni.showLoading({ title: '正在支付...' })
+        try {
+          const payRes = await billingApi.payBill(item.id)
+          if (payRes.code === 200) {
+            uni.showToast({ title: '支付成功', icon: 'success' })
+            fetchPendingBills()
+          }
+        } catch (e) {
+          uni.showToast({ title: e.message || '支付失败', icon: 'none' })
+        } finally {
+          uni.hideLoading()
+        }
+      }
+    }
+  })
 }
 
 const isOffDuty = (s) => (s === '3' || s === 'On Leave')
@@ -146,7 +242,7 @@ const handleBook = (doc) => {
     return
   }
   uni.navigateTo({
-    url: `/pages/appointment/detail?id=${doc.doctorId}&name=${doc.name}`
+    url: `/pages/appointment/detail?id=${doc.doctorId}&name=${doc.name}&fee=${doc.fee != null ? doc.fee : 50}&specialty=${doc.specialty || ''}`
   })
 }
 
@@ -285,6 +381,42 @@ onMounted(() => {
 @keyframes slideIn {
   from { opacity: 0; transform: translateY(20rpx); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+.order-list, .history-list { display: flex; flex-direction: column; gap: 28rpx; padding-top: 24rpx; }
+
+.order-card {
+  @include premium-card; padding: 32rpx;
+  .o-header { display: flex; justify-content: space-between; margin-bottom: 24rpx; border-bottom: 2rpx solid #F8FAFC; padding-bottom: 16rpx;
+    .o-type { font-size: 26rpx; font-weight: 800; color: $primary; }
+    .o-no { font-size: 22rpx; color: $text-hint; }
+  }
+  .o-body { display: flex; justify-content: space-between; align-items: center; 
+    .o-remark { font-size: 28rpx; font-weight: 700; color: $text-main; display: block; margin-bottom: 8rpx; }
+    .o-time { font-size: 22rpx; color: $text-sub; }
+    .o-price { text-align: right; .u { font-size: 24rpx; color: $accent; font-weight: 700; } .p { font-size: 40rpx; color: $accent; font-weight: 900; } }
+  }
+  .o-footer { margin-top: 24rpx; display: flex; justify-content: flex-end;
+    .pay-btn { @include btn-primary; width: 180rpx; height: 64rpx; font-size: 24rpx; background: linear-gradient(135deg, #FF8A80 0%, #FF5252 100%); }
+  }
+}
+
+.history-card {
+  @include premium-card; padding: 32rpx;
+  .h-top { display: flex; justify-content: space-between; margin-bottom: 20rpx;
+    .h-type { font-size: 24rpx; color: #fff; background: $primary; padding: 4rpx 16rpx; border-radius: 8rpx; font-weight: 700; }
+    .h-time { font-size: 22rpx; color: $text-hint; }
+  }
+  .h-content { 
+    .h-item { display: flex; justify-content: space-between; margin-bottom: 12rpx;
+      .l { font-size: 24rpx; color: $text-sub; }
+      .v { font-size: 24rpx; color: $text-main; font-weight: 700; }
+    }
+    .h-diag { margin-top: 16rpx; padding-top: 16rpx; border-top: 2rpx dashed #eee;
+      .l { font-size: 22rpx; color: $primary; font-weight: 800; display: block; margin-bottom: 8rpx; }
+      .v { font-size: 24rpx; color: $text-sub; line-height: 1.4; }
+    }
+  }
 }
 
 .safe-bottom { height: 160rpx; }

@@ -3,7 +3,7 @@
     <view class="custom-navbar" :style="{ paddingTop: statusBarHeight + 'px' }">
       <view class="nav-content">
         <uni-icons type="left" size="24" color="#FFFFFF" @tap="goBack" />
-        <text class="nav-title">充值中心</text>
+        <text class="nav-title">钱包中心</text>
         <view style="width: 24px;"></view>
       </view>
     </view>
@@ -20,10 +20,6 @@
             <text class="symbol">¥</text>
             <text class="value">{{ memberInfo.balance || '0.00' }}</text>
           </view>
-        </view>
-        <view class="member-tag">
-          <uni-icons type="vip-filled" size="14" color="#F1C40F" />
-          <text>{{ parseLevel(memberInfo.level) }}</text>
         </view>
       </view>
 

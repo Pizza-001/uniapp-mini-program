@@ -1,13 +1,13 @@
 <template>
   <view class="container">
-    <view class="header-card">
+    <view class="header-card shadow-lg">
       <view class="total-points">
         <text class="label">当前可用积分</text>
         <text class="value">{{ memberInfo.points || 0 }}</text>
       </view>
       <view class="action-row">
         <view class="action-btn" @tap="goMall">
-          <uni-icons type="shop" size="18" color="#FFFFFF" />
+          <uni-icons type="shop-filled" size="20" color="#FFFFFF" />
           <text>积分商城</text>
         </view>
         <view class="action-btn outline" @tap="showRule">
@@ -22,19 +22,20 @@
         <view class="record-item" v-for="(item, index) in records" :key="index">
           <view class="r-left">
             <view class="icon-box" :class="item.type">
-              <uni-icons :type="item.type === 'plus' ? 'plus-filled' : 'minus-filled'" size="16" color="#FFFFFF" />
+              <uni-icons :type="item.type === 'plus' ? 'plus-filled' : 'minus-filled'" size="18" color="#FFFFFF" />
             </view>
             <view class="r-info">
               <text class="r-title">{{ item.title }}</text>
-              <text class="r-time">{{ item.time }}</text>
+              <text class="r-time">{{ formatDate(item.createTime) }}</text>
             </view>
           </view>
-          <text class="r-val" :class="item.type">{{ item.type === 'plus' ? '+' : '-' }}{{ item.val }}</text>
+          <text class="r-val" :class="item.type">{{ item.type === 'plus' ? '+' : '-' }}{{ item.changePoints }}</text>
         </view>
       </view>
       <view class="empty-box" v-else>
-        <image src="/static/images/empty_data.png" mode="aspectFit" />
-        <text>暂无积分记录</text>
+        <image src="/static/images/empty_data.png" mode="aspectFit" v-if="hasEmptyImage" />
+        <view class="empty-icon" v-else>📊</view>
+        <text>暂无积分记录，快去消费积攒吧</text>
       </view>
     </view>
   </view>
@@ -45,98 +46,112 @@ import { ref, onMounted } from 'vue'
 import { memberApi } from '@/api/index.js'
 
 const memberInfo = ref({ points: 0 })
-const records = ref([
-  { title: '每日签到赠送', time: '2026-04-23 09:00', val: 5, type: 'plus' },
-  { title: '购买猫粮消费抵扣', time: '2026-04-22 14:30', val: 50, type: 'minus' },
-  { title: '成功分享赠送', time: '2026-04-21 18:20', val: 10, type: 'plus' },
-  { title: '宠物疫苗预约奖励', time: '2026-04-20 10:15', val: 20, type: 'plus' }
-])
+const records = ref([])
+const hasEmptyImage = ref(false)
 
-const getMemberAsset = async () => {
+const fetchData = async () => {
+  uni.showLoading({ title: '加载中...' })
   try {
-    const res = await memberApi.getMemberInfo()
-    if(res.code === 200 && res.data) {
-      memberInfo.value = res.data
-    }
-  } catch(e) {}
+    // 1. 获取会员信息
+    const memberRes = await memberApi.getMemberInfo()
+    if(memberRes.data) memberInfo.value = memberRes.data
+    
+    // 2. 获取积分记录
+    const pointsRes = await memberApi.getPointsRecords()
+    records.value = pointsRes.data || []
+  } catch(e) {
+  } finally {
+    uni.hideLoading()
+  }
 }
 
-const goMall = () => uni.showToast({ title: '积分商城维护中', icon: 'none' })
+const formatDate = (dateStr) => {
+  if (!dateStr) return ''
+  return dateStr.replace('T', ' ').substring(0, 16)
+}
+
+const goMall = () => uni.showToast({ title: '积分商城正在装修中', icon: 'none' })
 const showRule = () => {
   uni.showModal({
-    title: '积分规则',
-    content: '1. 消费1元积1分\n2. 每日签到最高可得10积分\n3. 积分可用于抵扣消费或兑换商品',
-    showCancel: false
+    title: '积分指南',
+    content: '1. 购买药品：每消费1元增加1积分\n2. 积分可用于以后兑换宠物零食或抵扣医疗费\n3. 积分永久有效',
+    showCancel: false,
+    confirmColor: '#6366F1'
   })
 }
 
 onMounted(() => {
-  getMemberAsset()
+  fetchData()
 })
 </script>
 
 <style lang="scss" scoped>
-.container { min-height: 100vh; background: #F8FAFC; padding: 30rpx; }
+.container { min-height: 100vh; background: #F8FAFC; padding: 40rpx 32rpx; }
 
 .header-card {
-  background: linear-gradient(135deg, #7986CB 0%, #5C6BC0 100%);
-  border-radius: 40rpx; padding: 60rpx 40rpx;
+  background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+  border-radius: 50rpx; padding: 70rpx 40rpx;
   display: flex; flex-direction: column; align-items: center; gap: 40rpx;
-  box-shadow: 0 20rpx 40rpx rgba(92, 107, 192, 0.2);
-  margin-bottom: 40rpx;
+  margin-bottom: 50rpx;
   
   .total-points {
-    display: flex; flex-direction: column; align-items: center; gap: 10rpx;
-    .label { color: rgba(255,255,255,0.7); font-size: 24rpx; }
-    .value { color: #fff; font-size: 80rpx; font-weight: 900; }
+    display: flex; flex-direction: column; align-items: center; gap: 15rpx;
+    .label { color: rgba(255,255,255,0.8); font-size: 26rpx; font-weight: 600; letter-spacing: 2rpx; }
+    .value { color: #fff; font-size: 100rpx; font-weight: 900; line-height: 1; }
   }
   
   .action-row {
-    display: flex; gap: 20rpx;
+    display: flex; gap: 24rpx;
     .action-btn {
-      display: flex; align-items: center; gap: 10rpx;
-      background: rgba(255,255,255,0.2); color: #fff; font-size: 24rpx; font-weight: 600;
-      padding: 16rpx 40rpx; border-radius: 100rpx;
+      display: flex; align-items: center; gap: 12rpx;
+      background: rgba(255,255,255,0.25); color: #fff; font-size: 26rpx; font-weight: 700;
+      padding: 20rpx 48rpx; border-radius: 30rpx;
+      backdrop-filter: blur(10px);
       &.outline { background: transparent; border: 2rpx solid rgba(255,255,255,0.4); }
     }
   }
 }
 
 .list-section {
-  .section-title { font-size: 32rpx; font-weight: 800; color: #2D3436; margin-bottom: 30rpx; padding-left: 10rpx; }
+  .section-title { font-size: 34rpx; font-weight: 900; color: #1E293B; margin-bottom: 30rpx; }
   
   .record-list {
-    background: #fff; border-radius: 30rpx; padding: 0 30rpx;
+    background: #fff; border-radius: 40rpx; padding: 10rpx 32rpx;
+    box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.02);
+    
     .record-item {
-      display: flex; justify-content: space-between; align-items: center; padding: 30rpx 0;
-      border-bottom: 2rpx solid #F1F4F8;
+      display: flex; justify-content: space-between; align-items: center; padding: 36rpx 0;
+      border-bottom: 1rpx solid #F1F5F9;
       &:last-child { border-bottom: none; }
       
       .r-left {
-        display: flex; align-items: center; gap: 20rpx;
+        display: flex; align-items: center; gap: 24rpx;
         .icon-box {
-          width: 64rpx; height: 64rpx; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-          &.plus { background: #66BB6A; }
-          &.minus { background: #FF7675; }
+          width: 72rpx; height: 72rpx; border-radius: 24rpx; display: flex; align-items: center; justify-content: center;
+          &.plus { background: #10B981; }
+          &.minus { background: #F43F5E; }
         }
         .r-info {
-          display: flex; flex-direction: column; gap: 6rpx;
-          .r-title { font-size: 28rpx; font-weight: 700; color: #2D3436; }
-          .r-time { font-size: 22rpx; color: #B2BEC3; }
+          display: flex; flex-direction: column; gap: 8rpx;
+          .r-title { font-size: 28rpx; font-weight: 800; color: #1E293B; }
+          .r-time { font-size: 22rpx; color: #94A3B8; font-weight: 500; }
         }
       }
       .r-val {
-        font-size: 32rpx; font-weight: 900;
-        &.plus { color: #66BB6A; }
-        &.minus { color: #2D3436; }
+        font-size: 36rpx; font-weight: 900;
+        &.plus { color: #10B981; }
+        &.minus { color: #1E293B; }
       }
     }
   }
 }
 
 .empty-box {
-  display: flex; flex-direction: column; align-items: center; gap: 20rpx; padding-top: 100rpx;
+  display: flex; flex-direction: column; align-items: center; gap: 20rpx; padding-top: 150rpx;
+  .empty-icon { font-size: 80rpx; }
   image { width: 300rpx; height: 300rpx; opacity: 0.5; }
-  text { font-size: 26rpx; color: #B2BEC3; }
+  text { font-size: 26rpx; color: #94A3B8; font-weight: 600; }
 }
+
+.shadow-lg { box-shadow: 0 30rpx 60rpx rgba(99, 102, 241, 0.25); }
 </style>

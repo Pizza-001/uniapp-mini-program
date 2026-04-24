@@ -1,5 +1,16 @@
 <template>
   <view class="ai-page">
+    <!-- 自定义导航栏 -->
+    <view class="nav-header" :style="{ paddingTop: statusBarHeight + 'px' }">
+      <view class="nav-content">
+        <view class="back-btn" @tap="goBack">
+          <uni-icons type="left" size="24" color="#2C3E50" />
+        </view>
+        <text class="title">AI 健康助手</text>
+        <view class="placeholder"></view>
+      </view>
+    </view>
+
     <!-- 聊天内容区 -->
     <scroll-view 
       class="chat-scroll" 
@@ -10,7 +21,7 @@
       <view class="chat-container">
         <!-- 欢迎消息 -->
         <view class="message-wrapper assistant">
-          <image class="avatar" src="@/static/images/ai-pet.png" mode="aspectFit" />
+          <image class="avatar" src="/static/images/ai-consult.png" mode="aspectFit" />
           <view class="bubble">
             <text>您好！我是您的 AI 宠物健康管家。您可以向我咨询关于宠物的健康、行为、喂养等任何问题。</text>
           </view>
@@ -74,9 +85,14 @@ const inputMsg = ref('')
 const scrollTop = ref(0)
 const keyboardHeight = ref(0)
 const loading = ref(false)
+const statusBarHeight = ref(0)
 
-const userAvatar = 'https://dummyimage.com/100x100/ff7043/fff&text=Me'
-const assistantAvatar = '/static/images/ai-pet.png'
+const userAvatar = 'https://dummyimage.com/100x100/4A569D/fff&text=Me'
+const assistantAvatar = '/static/images/ai-consult.png'
+
+const goBack = () => {
+  uni.navigateBack()
+}
 
 const scrollToBottom = () => {
   nextTick(() => {
@@ -130,6 +146,9 @@ const handleSend = async () => {
 }
 
 onMounted(() => {
+  const sys = uni.getSystemInfoSync()
+  statusBarHeight.value = sys.statusBarHeight
+  
   scrollToBottom()
   
   // 监听键盘高度
@@ -145,13 +164,46 @@ onMounted(() => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f5f6f7;
+  background-color: #F8FAFC;
 }
 
 .chat-scroll {
   flex: 1;
   padding: 0 30rpx;
   box-sizing: border-box;
+}
+
+/* 导航栏样式 */
+.nav-header {
+  background-color: #fff;
+  border-bottom: 1rpx solid #F0F4F8;
+  z-index: 100;
+  
+  .nav-content {
+    height: 88rpx;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30rpx;
+    
+    .back-btn {
+      width: 80rpx;
+      height: 80rpx;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    
+    .title {
+      font-size: 32rpx;
+      font-weight: 900;
+      color: #2C3E50;
+    }
+    
+    .placeholder {
+      width: 80rpx;
+    }
+  }
 }
 
 .chat-container {
@@ -171,13 +223,14 @@ onMounted(() => {
   }
   
   .bubble {
-    max-width: 70%;
-    padding: 20rpx 30rpx;
-    border-radius: 30rpx;
+    max-width: 75%;
+    padding: 24rpx 32rpx;
+    border-radius: 32rpx;
     font-size: 28rpx;
-    line-height: 1.5;
+    line-height: 1.6;
     position: relative;
     word-break: break-all;
+    box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.03);
   }
   
   &.assistant {
@@ -185,8 +238,9 @@ onMounted(() => {
     .bubble {
       margin-left: 20rpx;
       background-color: #fff;
-      color: #333;
+      color: #2C3E50;
       border-top-left-radius: 4rpx;
+      border: 1rpx solid #EDF2F7;
     }
   }
   
@@ -194,9 +248,10 @@ onMounted(() => {
     flex-direction: row-reverse;
     .bubble {
       margin-right: 20rpx;
-      background-color: #FF7043;
+      background: linear-gradient(135deg, #4A569D 0%, #5C6BC0 100%);
       color: #fff;
       border-top-right-radius: 4rpx;
+      box-shadow: 0 8rpx 20rpx rgba(74, 86, 157, 0.2);
     }
   }
 }

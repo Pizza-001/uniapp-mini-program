@@ -1,173 +1,211 @@
 <template>
-  <view class="page">
-    <scroll-view scroll-y class="scroll-view">
-      <!-- 个人中心头部 -->
-      <view class="profile-header">
-        <view class="header-glass-bg"></view>
-        <view class="top-padding" :style="{ height: statusBarHeight + 'px' }"></view>
-        <view class="top-row">
-          <view class="user-main" @tap="handleUserClick">
-            <view class="avatar-box">
-              <image class="avatar" :src="userInfo && userInfo.avatar ? (BASE_URL + userInfo.avatar) : '/static/icons/profile.png'" mode="aspectFill" />
-              <view class="badge-vip">V{{ memberInfo.level || 0 }}</view>
-            </view>
-            <view class="user-meta">
-              <view class="name-row">
-                <text class="name">{{ userInfo ? (userInfo.nickName || userInfo.userName) : '点击登录' }}</text>
-                <view class="level-tag" v-if="userInfo">{{ parseLevel(memberInfo.level) }}</view>
-              </view>
-              <text class="tag">{{ userInfo ? '宠爱守护者 · 全城宠爱' : '登录开启智慧宠医生活' }}</text>
-            </view>
+  <view class="profile-page">
+    <!-- 极简画廊风个人信息头部 -->
+    <view class="premium-header">
+      <view class="status-bar-placeholder" :style="{ height: statusBarHeight + 'px' }"></view>
+      
+      <view class="header-main">
+        <view class="user-info-v5" @tap="handleUserClick">
+          <view class="avatar-frame">
+            <image :src="userInfo && userInfo.avatar ? formatImageUrl(userInfo.avatar) : 'https://img.icons8.com/plasticine/200/dog.png'" class="avatar-v5" />
           </view>
-          <view class="settings-icon" @tap="uni.showToast({title:'设置开发中',icon:'none'})">
-            <!-- 即使 uni-icons 出错，这里也有文字或背景兜底 -->
-            <uni-icons type="gear-filled" size="24" color="#fff" />
+          <view class="text-meta">
+            <text class="user-name-v5">{{ userInfo && userInfo.nickName ? userInfo.nickName : '宠物守护者' }}</text>
+            <view class="identity-badge">
+                <uni-icons type="vip-filled" size="12" color="#EBAC50" />
+                <text>{{ parseLevelTitle(memberInfo.level) }}</text>
+            </view>
           </view>
         </view>
-
-        <!-- 会员卡片 -->
-        <view class="membership-card">
-          <view class="card-gloss"></view>
-          <view class="card-content">
-            <view class="c-top">
-              <view class="brand">
-                <view class="icon-crown"></view>
-                <text class="brand-text">PLATINUM MEMBER</text>
-              </view>
-              <view class="status-tag">ACTIVE</view>
-            </view>
-            <view class="c-mid">
-              <text class="card-num">8888 6666 0000 {{ userInfo ? (userInfo.userId % 10000) : '7829' }}</text>
-            </view>
-            <view class="c-bottom">
-              <view class="exp-info">
-                <text class="label">EXPIRY DATE</text>
-                <text class="val">PERMANENT</text>
-              </view>
-              <view class="recharge-btn" @tap="navigateTo('/pages/profile/recharge')">
-                <text>立即充值</text>
-                <view class="icon-arrow"></view>
-              </view>
-            </view>
+        <view class="action-icons">
+          <view class="icon-btn" @tap="handleNav('/pages/profile/settings')">
+            <uni-icons type="gear" size="26" color="#1A1A1A" />
           </view>
         </view>
       </view>
+    </view>
 
-      <view class="main-container">
-        <!-- 资产数据 -->
-        <view class="asset-grid card">
-          <view class="asset-item" @tap="navigateTo('/pages/profile/recharge')">
-            <view class="val"><text class="unit">¥</text>{{ memberInfo.balance || 0 }}</view>
-            <text class="label">账户余额</text>
-          </view>
-          <view class="asset-item" @tap="navigateTo('/pages/profile/points')">
-            <view class="val">{{ memberInfo.points || 0 }}</view>
-            <text class="label">我的积分</text>
-          </view>
-          <view class="asset-item" @tap="navigateTo('/pages/profile/coupons')">
-            <view class="val">3</view>
-            <text class="label">优惠券</text>
-          </view>
-        </view>
-
-        <!-- 常用功能 - 采用 CSS 绘制图标 + SVG 背景方案，解决 uni-icons 不显示问题 -->
-        <view class="function-section card">
-          <view class="section-title">
-            <text>我的服务</text>
-            <text class="all" @tap="uni.showToast({title:'更多功能开发中',icon:'none'})">全部服务</text>
-          </view>
-          <view class="function-grid">
-            <view class="f-item" @tap="navigateTo('/pages/record/index')">
-              <view class="f-icon-wrap" style="background: #E8EAF6">
-                <image src="https://img.icons8.com/color/96/medical-history.png" class="f-icon-img" />
-              </view>
-              <text class="f-label">挂号记录</text>
+    <!-- 会员主卡区 (高层级浮动设计) -->
+    <view class="hero-section">
+      <view class="brand-member-card-v4" @tap="handleGoMemberCenter">
+        <view class="card-inner">
+          <view class="info-side">
+            <view class="level-row">
+              <text class="l-tag">L{{ memberInfo.level || 0 }}</text>
+              <text class="l-name">{{ parseLevelTitle(memberInfo.level) }}</text>
             </view>
-            <view class="f-item" @tap="navigateTo('/pages/pet/index')">
-              <view class="f-icon-wrap" style="background: #FFF3E0">
-                <image src="https://img.icons8.com/color/96/dog.png" class="f-icon-img" />
-              </view>
-              <text class="f-label">宠物档案</text>
+            <view class="growth-box">
+              <text>成长值 {{ memberInfo.growthValue || 0 }}</text>
+              <uni-icons type="help" size="14" color="rgba(255,255,255,0.6)" @tap.stop="handleShowGrowthRule" />
             </view>
-            <view class="f-item" @tap="navigateTo('/pages/profile/recharge')">
-              <view class="f-icon-wrap" style="background: #E3F2FD">
-                <image src="https://img.icons8.com/color/96/wallet.png" class="f-icon-img" />
-              </view>
-              <text class="f-label">充值中心</text>
+            <view class="progress-track">
+              <view class="progress-bar" :style="{ width: growthPercent + '%' }"></view>
             </view>
-            <view class="f-item" @tap="navigateTo('/pages/profile/favorites')">
-              <view class="f-icon-wrap" style="background: #FFEBEE">
-                <image src="https://img.icons8.com/color/96/filled-star.png" class="f-icon-img" />
+          </view>
+          <view class="mascot-side">
+            <view class="m-frame">
+              <view class="eyes">
+                <view class="eye left"><view class="pupil"></view></view>
+                <view class="eye right"><view class="pupil"></view></view>
               </view>
-              <text class="f-label">我的收藏</text>
+              <view class="m-back-icon"><uni-icons type="left" size="14" color="#EBAC50" /></view>
             </view>
           </view>
         </view>
-
-        <view class="menu-card card">
-          <view class="menu-item" v-for="(m, i) in menuList" :key="m.label" @tap="navigateTo(m.url)">
-            <view class="m-left">
-              <view class="m-dot" :style="{ background: m.color }"></view>
-              <text>{{ m.label }}</text>
-            </view>
-            <uni-icons type="right" size="14" color="#DCDFE6" />
+        
+        <!-- 联动切换导航条 -->
+        <view class="card-nav-v4">
+          <view class="nav-tags">
+            <text class="tag" :class="{active: currentTab === 0}" @tap.stop="currentTab = 0">权益礼</text>
+            <text class="tag" :class="{active: currentTab === 1}" @tap.stop="currentTab = 1">心意礼</text>
+            <text class="tag" :class="{active: currentTab === 2}" @tap.stop="currentTab = 2">成长礼</text>
+          </view>
+          <view class="nav-entry" @tap.stop="handleGoMemberCenter">
+            <text>会员中心</text>
+            <uni-icons type="right" size="12" color="#999" />
           </view>
         </view>
 
-        <view class="logout-action" @tap="handleLogout">退出当前账号</view>
-        <view class="safe-bottom" />
+        <!-- 动态切换的特权图标区 (高对比度设计) -->
+        <view class="benefit-row">
+            <view class="b-item" v-for="(p, i) in activeTabPrivileges" :key="i" @tap.stop="showPrivilege(p)">
+                <view class="b-icon badge-gold">
+                    <uni-icons :type="p.icon" size="24" color="#EBAC50" />
+                </view>
+                <text>{{ p.label }}</text>
+            </view>
+        </view>
       </view>
-    </scroll-view>
+    </view>
+
+    <!-- 精简版金刚区 (3列紧凑型) -->
+    <view class="function-grid">
+      <view class="grid-card shadow-soft" v-for="(f, i) in mainFunctions" :key="i" @tap="handleNav(f.url)">
+        <image :src="f.icon" class="f-icon" />
+        <text class="f-name">{{ f.name }}</text>
+      </view>
+    </view>
+
+    <!-- 综合菜单列表 (含 挂号记录 & 勋章墙) -->
+    <view class="menu-list">
+      <view class="menu-row" v-for="(m, i) in menus" :key="i" @tap="handleNav(m.url)">
+        <view class="ml">
+          <image :src="m.img" class="m-icon" />
+          <text>{{ m.name }}</text>
+        </view>
+        <uni-icons type="right" size="14" color="#DCDFE6" />
+      </view>
+    </view>
+
+    <!-- 自定义高级特权弹框 -->
+    <view class="premium-popup" v-if="showPopupBox" @touchmove.stop.prevent>
+        <view class="popup-mask" @tap="closePopup"></view>
+        <view class="popup-content animate-pop">
+            <text class="p-title">{{ activePrivilege.label }}</text>
+            <view class="p-desc-box">
+                <text class="p-text">{{ activePrivilege.longDesc || '该等级会员可享受专属特权服务，详情请咨询客服。' }}</text>
+            </view>
+            <view class="p-close-btn" @tap="closePopup">我知道了</view>
+        </view>
+    </view>
+
+    <view class="logout-btn" @tap="handleLogout">退出登录</view>
+    <view class="safe-area"></view>
   </view>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { userApi, authApi, memberApi, BASE_URL } from '@/api/index.js'
+import { ref, computed, onMounted } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
+import { userApi, memberApi, formatImageUrl } from '@/api/index.js'
 
 const statusBarHeight = ref(0)
 const userInfo = ref(null)
-const memberInfo = ref({ level: '0', balance: 0, points: 0 })
+const memberInfo = ref({ level: '6', balance: 0, points: 0, growthValue: 2500 })
+const currentTab = ref(1) 
 
-const parseLevel = (levelStr) => {
-  const levels = { '3': '钻石会员', '2': '黄金会员', '1': '白银会员' }
-  return levels[levelStr] || '普通会员'
-}
-
-const menuList = [
-  { label: '预约记录', color: '#5C6BC0', url: '/pages/record/index' },
-  { label: '就诊人管理', color: '#42A5F5', url: '#' },
-  { label: '地址管理', color: '#66BB6A', url: '#' },
-  { label: '在线客服', color: '#f39c12', url: '#' },
+const mainFunctions = [
+  { name: '我的档案', icon: 'https://img.icons8.com/color/96/dog.png', url: '/pages/pet/index' },
+  { name: '我的钱包', icon: 'https://img.icons8.com/color/96/wallet.png', url: '/pages/profile/recharge' },
+  { name: '积分商城', icon: 'https://img.icons8.com/color/96/gift.png', url: '/pages/points-mall/index' }
 ]
 
-const navigateTo = (url) => uni.navigateTo({ url })
+const menus = [
+  { name: '挂号记录', img: 'https://img.icons8.com/fluency/96/document.png', url: '/pages/record/index' },
+  { name: '我的勋章', img: 'https://img.icons8.com/color/96/medal.png', url: '/pages/profile/medals' },
+  { name: '消费账单', img: 'https://img.icons8.com/color/96/bill.png', url: '/pages/profile/consumption' },
+  { name: '我的地址', img: 'https://img.icons8.com/color/96/marker.png', url: '/pages/profile/address' },
+  { name: '专属客服', img: 'https://img.icons8.com/color/96/customer-support.png', url: '/pages/profile/support' },
+  { name: '系统设置', img: 'https://img.icons8.com/color/96/settings.png', url: '/pages/profile/settings' }
+]
 
-const handleUserClick = () => {
-  if (!uni.getStorageSync('token')) navigateTo('/pages/login/index')
+const activeTabPrivileges = computed(() => {
+    const tabs = [
+        [
+            {label:'双倍积分', icon:'star-filled', longDesc:'消费即享双倍积分。'},
+            {label:'会员日', icon:'calendar', longDesc:'每月8日会员专属折扣。'},
+            {label:'会员价', icon:'cart-filled', longDesc:'专属折扣价格。'},
+            {label:'消费返现', icon:'wallet', longDesc:'最高立返10%现金。'}
+        ],
+        [
+            {label:'限定周边', icon:'shop', longDesc:'独家宠物定制周边免费领。'},
+            {label:'专属抽奖', icon:'gear', longDesc:'每月一次大奖池抽取机会。'},
+            {label:'社群神券', icon:'email', longDesc:'入群即领无门槛大红包。'},
+            {label:'专属客服', icon:'headphones', longDesc:'金牌管家1对1即时响应。'}
+        ],
+        [
+            {label:'升级积分', icon:'star', longDesc:'每次升级获赠额外积分。'},
+            {label:'勋章展示', icon:'medal', longDesc:'记录您的养宠荣誉。'},
+            {label:'成就奖励', icon:'gift', longDesc:'达成特定里程碑领好礼。'},
+            {label:'惊喜福袋', icon:'heart', longDesc:'不定期派送神秘礼袋。'}
+        ]
+    ]
+    return tabs[currentTab.value] || tabs[0]
+})
+
+const growthPercent = computed(() => {
+  const thresholds = [1000, 5000, 15000, 30000, 50000, 50000, 100000]
+  const target = thresholds[parseInt(memberInfo.value.level)] || 1000
+  return Math.min((memberInfo.value.growthValue / target) * 100, 100)
+})
+
+const parseLevelTitle = (lvl) => {
+  const titles = { '0': '实习铲屎官', '1': '资深铲屎官', '2': '护宠先锋', '3': '宠爱达人', '4': '荣耀养宠师', '5': '护宠大师', '6': '宠爱大宗师' }
+  return titles[lvl] || '宠爱守护者'
 }
 
-const getUserInfo = async () => {
-  try {
-    const res = await userApi.getInfo()
-    userInfo.value = res.user
-  } catch (e) {}
+// 详情弹窗逻辑
+const showPopupBox = ref(false)
+const activePrivilege = ref({})
+const showPrivilege = (p) => {
+    activePrivilege.value = p
+    showPopupBox.value = true
+}
+const closePopup = () => { showPopupBox.value = false }
+const handleShowGrowthRule = () => {
+    showPrivilege({ label: '成长值说明', longDesc: '成长值是会员等级晋升的位一凭证，通过消费、签到等任务获得。' })
 }
 
-const getMemberAsset = async () => {
+const handleGoMemberCenter = () => uni.navigateTo({ url: '/pages/profile/member-center' });
+const handleNav = (url) => uni.navigateTo({ url });
+
+const refreshData = async () => {
+  if (!uni.getStorageSync('token')) return
   try {
     const res = await memberApi.getMemberInfo()
-    if(res.code === 200 && res.data) memberInfo.value = res.data
-  } catch(e) {}
+    if (res.code === 200) memberInfo.value = res.data
+    const uRes = await userApi.getInfo()
+    if (uRes.code === 200) {
+      userInfo.value = uRes.user || uRes.data
+    }
+  } catch (e) {}
 }
 
 const handleLogout = () => {
   uni.showModal({
-    title: '提示', content: '确定要退出登录吗？',
-    success: async (res) => {
+    title: '提示', content: '确定退出登录吗？',
+    success: (res) => {
       if (res.confirm) {
-        try { await authApi.logout() } catch (e) {}
         uni.removeStorageSync('token'); uni.reLaunch({ url: '/pages/login/index' })
       }
     }
@@ -178,120 +216,98 @@ onMounted(() => {
   statusBarHeight.value = uni.getSystemInfoSync().statusBarHeight
 })
 
-onShow(() => {
-  if (uni.getStorageSync('token')) {
-    getUserInfo(); getMemberAsset()
-  }
-})
+onShow(() => refreshData())
 </script>
 
 <style lang="scss" scoped>
-.page { background: #F4F7FC; min-height: 100vh; }
-.scroll-view { height: 100%; }
+.profile-page { background: #F8F9FA; min-height: 100vh; }
 
-.profile-header {
-  position: relative;
-  background: linear-gradient(135deg, #5C6BC0 0%, #3F51B5 100%);
-  padding: 0 40rpx 160rpx;
-  border-bottom-left-radius: 60rpx;
-  border-bottom-right-radius: 60rpx;
-  
-  .header-glass-bg {
-    position: absolute; top: -100rpx; right: -100rpx; width: 400rpx; height: 400rpx;
-    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-  }
-  
-  .top-row {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 60rpx; margin-top: 30rpx;
-    position: relative; z-index: 5;
-    .user-main {
-      display: flex; align-items: center; gap: 30rpx;
-      .avatar-box {
-        position: relative;
-        .avatar { width: 120rpx; height: 120rpx; border-radius: 50%; border: 4rpx solid rgba(255,255,255,0.4); }
-        .badge-vip { 
-          position: absolute; bottom: 0; right: -8rpx; background: #F1C40F; color: #fff; 
-          font-size: 18rpx; font-weight: 900; padding: 2rpx 10rpx; border-radius: 100rpx; 
-          border: 4rpx solid #3F51B5;
-        }
-      }
-      .user-meta {
-        .name-row { display: flex; align-items: center; gap: 16rpx; .name { font-size: 38rpx; font-weight: 800; color: #fff; } .level-tag { font-size: 18rpx; color: #fff; background: rgba(255,255,255,0.2); padding: 2rpx 10rpx; border-radius: 6rpx; } }
-        .tag { font-size: 22rpx; color: rgba(255,255,255,0.7); margin-top: 4rpx; display: block; }
-      }
+.premium-header {
+  background: #fff; padding: 0 40rpx 40rpx;
+  .header-main {
+    display: flex; justify-content: space-between; align-items: center; padding: 50rpx 0 20rpx;
+    .user-info-v5 {
+      display: flex; align-items: center; gap: 32rpx;
+      .avatar-frame { width: 140rpx; height: 140rpx; border-radius: 50%; padding: 6rpx; background: #fff; box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.08); .avatar-v5 { width: 100%; height: 100%; border-radius: 50%; } }
+      .text-meta { .user-name-v5 { font-size: 44rpx; font-weight: 900; color: #1A1A1A; display: block; margin-bottom: 8rpx; } .identity-badge { display: flex; align-items: center; gap: 6rpx; background: #F8F9FA; padding: 4rpx 16rpx; border-radius: 100rpx; text { font-size: 20rpx; color: #666; font-weight: 700; } } }
     }
-    .settings-icon { width: 72rpx; height: 72rpx; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.15); border-radius: 50%; }
+    .action-icons { .icon-btn { width: 80rpx; height: 80rpx; display: flex; align-items: center; justify-content: center; background: #F8F9FA; border-radius: 50%; } }
   }
 }
 
-.membership-card {
-  position: relative; height: 320rpx; border-radius: 40rpx; overflow: hidden;
-  background: linear-gradient(135deg, #2D3436 0%, #000000 100%);
-  box-shadow: 0 40rpx 80rpx rgba(0,0,0,0.3);
+.hero-section {
+  padding: 0 40rpx; margin-top: 0;
+}
+
+.brand-member-card-v4 {
+  background: #fff; border-radius: 40rpx; overflow: hidden; box-shadow: 0 20rpx 60rpx rgba(0,0,0,0.1);
+  background: #3D3305;
   
-  .card-gloss { position: absolute; top: -100rpx; left: -100rpx; width: 400rpx; height: 400rpx; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 80%); }
-  
-  .card-content {
-    position: relative; z-index: 2; height: 100%; padding: 40rpx 50rpx;
-    display: flex; flex-direction: column; justify-content: space-between;
-    box-sizing: border-box;
-    .c-top {
-      display: flex; justify-content: space-between; align-items: center;
-      .brand { 
-        display: flex; align-items: center; gap: 12rpx; 
-        .icon-crown { width: 32rpx; height: 32rpx; background: #F1C40F; clip-path: polygon(50% 0%, 100% 100%, 0% 100%); }
-        .brand-text { font-size: 24rpx; color: rgba(255,255,255,0.9); font-weight: 800; letter-spacing: 4rpx; } 
-      }
-      .status-tag { font-size: 16rpx; color: #66BB6A; border: 2rpx solid #66BB6A; padding: 4rpx 12rpx; border-radius: 8rpx; font-weight: 900; }
+  .card-inner {
+    padding: 40rpx; display: flex; justify-content: space-between; align-items: center; min-height: 220rpx;
+    .info-side {
+      flex: 1;
+      .level-row { display: flex; align-items: baseline; gap: 12rpx; margin-bottom: 12rpx; .l-tag { color: #fff; font-size: 44rpx; font-weight: 800; } .l-name { color: #fff; font-size: 48rpx; font-weight: 800; } }
+      .growth-box { display: flex; align-items: center; gap: 8rpx; margin-bottom: 24rpx; text { color: rgba(255,255,255,0.8); font-size: 26rpx; font-weight: 600; } }
+      .progress-track { height: 4rpx; background: rgba(255,255,255,0.1); border-radius: 10rpx; width: 300rpx; .progress-bar { height: 100%; background: #EBAC50; border-radius: 10rpx; box-shadow: 0 0 10rpx #EBAC50; } }
     }
-    .c-mid { .card-num { font-size: 36rpx; color: #fff; letter-spacing: 10rpx; font-family: monospace; } }
-    .c-bottom {
-      display: flex; justify-content: space-between; align-items: flex-end;
-      .exp-info { .label { font-size: 14rpx; color: rgba(255,255,255,0.4); font-weight: 800; display: block; } .val { font-size: 20rpx; color: rgba(255,255,255,0.8); font-weight: 600; } }
-      .recharge-btn { 
-        background: #F1C40F; color: #2D3436; font-size: 24rpx; font-weight: 800; padding: 16rpx 36rpx; border-radius: 100rpx; 
-        display: flex; align-items: center; gap: 8rpx; 
-        .icon-arrow { width: 12rpx; height: 12rpx; border-right: 3rpx solid #2D3436; border-top: 3rpx solid #2D3436; transform: rotate(45deg); }
-      }
+    .m-frame {
+      width: 130rpx; height: 90rpx; border: 2rpx solid rgba(235, 172, 80, 0.4); border-radius: 30rpx; display: flex; align-items: center; justify-content: center; position: relative;
+      .m-back-icon { position: absolute; right: 6rpx; top: 6rpx; transform: rotate(180deg); }
+      .eye { width: 32rpx; height: 48rpx; background: #fff; border-radius: 16rpx; position: relative; .pupil { width: 12rpx; height: 12rpx; background: #000; border-radius: 50%; position: absolute; bottom: 8rpx; left: 50%; transform: translateX(-50%); } }
+    }
+  }
+
+  .card-nav-v4 {
+    display: flex; justify-content: space-between; align-items: center; padding: 24rpx 40rpx; background: #fff;
+    .nav-tags { display: flex; gap: 16rpx; .tag { padding: 10rpx 24rpx; border-radius: 100rpx; background: #F4F5F7; font-size: 22rpx; color: #666; font-weight: 600; &.active { background: #FFF8E1; color: #333; font-weight: 700; } } }
+    .nav-entry { display: flex; align-items: center; gap: 4rpx; text { font-size: 24rpx; color: #999; font-weight: 600; } }
+  }
+
+  .benefit-row {
+    display: flex; justify-content: space-between; padding: 20rpx 40rpx 40rpx; background: #fff;
+    .b-item {
+        display: flex; flex-direction: column; align-items: center; gap: 12rpx;
+        .b-icon { width: 76rpx; height: 76rpx; display: flex; align-items: center; justify-content: center; &.badge-gold { background: #1A1A1A; border-radius: 50%; border: 2rpx solid #EBAC50; box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.3); } }
+        text { font-size: 22rpx; color: #333; font-weight: 700; }
     }
   }
 }
 
-.main-container { position: relative; z-index: 10; padding: 0 30rpx; margin-top: -80rpx; }
-.card { background: #fff; border-radius: 40rpx; padding: 40rpx; margin-bottom: 30rpx; box-shadow: 0 20rpx 40rpx rgba(0,0,0,0.02); }
-
-.asset-grid {
-  display: flex; justify-content: space-between; padding: 40rpx;
-  .asset-item {
-    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12rpx;
-    &:not(:last-child) { border-right: 2rpx solid #F1F2F6; }
-    .val { font-size: 44rpx; font-weight: 900; color: #2D3436; .unit { font-size: 24rpx; color: #B2BEC3; } }
-    .label { font-size: 24rpx; color: #B2BEC3; font-weight: 600; }
-  }
+.function-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 30rpx; padding: 40rpx;
+  .grid-card { background: #fff; border-radius: 40rpx; padding: 30rpx 0; display: flex; flex-direction: column; align-items: center; gap: 16rpx; box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.03); .f-icon { width: 80rpx; height: 80rpx; } .f-name { font-size: 26rpx; color: #333; font-weight: 700; } }
 }
 
-.function-section {
-  .section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40rpx; text { font-size: 32rpx; font-weight: 800; color: #2D3436; } .all { font-size: 24rpx; color: #B2BEC3; font-weight: 600; } }
-  .function-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 20rpx;
-    .f-item {
-      display: flex; flex-direction: column; align-items: center; gap: 20rpx;
-      .f-icon-wrap { width: 110rpx; height: 110rpx; border-radius: 36rpx; display: flex; align-items: center; justify-content: center; }
-      .f-icon-img { width: 64rpx; height: 64rpx; }
-      .f-label { font-size: 26rpx; color: #2D3436; font-weight: 700; }
+.menu-list {
+  background: #fff; border-radius: 40rpx; margin: 0 40rpx; padding: 10rpx 40rpx;
+  .menu-row {
+    display: flex; justify-content: space-between; align-items: center; padding: 36rpx 0;
+    &:not(:last-child) { border-bottom: 2rpx solid #F8F9FA; }
+    .ml { 
+        display: flex; align-items: center; gap: 24rpx; 
+        .m-icon { width: 44rpx; height: 44rpx; }
+        text { font-size: 28rpx; color: #333; font-weight: 700; } 
     }
   }
 }
 
-.menu-card {
-  padding: 10rpx 40rpx;
-  .menu-item {
-    display: flex; justify-content: space-between; align-items: center; padding: 40rpx 0; border-bottom: 2rpx solid #F8FAFC;
-    &:last-child { border-bottom: none; }
-    .m-left { display: flex; align-items: center; gap: 24rpx; text { font-size: 30rpx; color: #2D3436; font-weight: 700; } .m-dot { width: 10rpx; height: 10rpx; border-radius: 50%; } }
-  }
-}
+.logout-btn { margin: 60rpx 40rpx; text-align: center; color: #FF7675; font-size: 28rpx; font-weight: 700; background: #fff; padding: 30rpx; border-radius: 40rpx; }
+.safe-area { height: 100rpx; }
 
-.logout-action { margin: 60rpx 0; text-align: center; color: #FF7675; font-size: 30rpx; font-weight: 700; padding: 30rpx; }
-.safe-bottom { height: 180rpx; }
+/* 弹框样式 */
+.premium-popup {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    .popup-mask { position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); }
+    .popup-content {
+        position: relative; width: 580rpx; background: linear-gradient(to bottom, #FFF0F0, #FFFFFF);
+        border-radius: 40rpx; padding: 60rpx 40rpx; box-sizing: border-box; display: flex; flex-direction: column; align-items: center;
+        .p-title { font-size: 40rpx; font-weight: 900; color: #FF1A1A; margin-bottom: 40rpx; letter-spacing: 2rpx; }
+        .p-desc-box { min-height: 120rpx; margin-bottom: 50rpx; .p-text { font-size: 28rpx; color: #333; line-height: 1.6; text-align: center; font-weight: 600; display: block; } }
+        .p-close-btn { width: 100%; height: 100rpx; background: linear-gradient(to right, #FF7675, #FF1A1A); border-radius: 100rpx; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 32rpx; font-weight: 900; box-shadow: 0 10rpx 30rpx rgba(255, 26, 26, 0.4); }
+    }
+}
+.animate-pop { animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes popIn { 0% { transform: scale(0.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 </style>

@@ -5,6 +5,9 @@
         <view class="back-arrow"></view>
       </view>
       <text class="header-title">正文</text>
+      <view class="fav-btn" @tap="toggleFavorite" :class="{ 'is-fav': isFavorite }">
+        <uni-icons :type="isFavorite ? 'heart-filled' : 'heart'" size="24" :color="isFavorite ? '#FF5252' : '#fff'" />
+      </view>
     </view>
     
     <scroll-view scroll-y class="content-scroll">
@@ -56,12 +59,50 @@ import { onLoad } from '@dcloudio/uni-app'
 
 const currentId = ref('')
 const detail = ref({})
+const isFavorite = ref(false)
 const defaultCover = 'https://dummyimage.com/600x400/1A1A2E/fff&text=PetKnowledge'
+
+const checkFavorite = () => {
+  const ids = uni.getStorageSync('my_fav_ids') || []
+  isFavorite.value = ids.includes(currentId.value)
+}
+
+const toggleFavorite = () => {
+  const ids = uni.getStorageSync('my_fav_ids') || []
+  const list = uni.getStorageSync('my_fav_list') || []
+  
+  const idStr = String(currentId.value)
+  const index = ids.findIndex(id => String(id) === idStr)
+  
+  if (index > -1) {
+    // 移除 ID
+    ids.splice(index, 1)
+    // 从全量列表中移除
+    const listIndex = list.findIndex(i => String(i.knowledgeId) === idStr)
+    if (listIndex > -1) list.splice(listIndex, 1)
+    
+    isFavorite.value = false
+    uni.showToast({ title: '已取消', icon: 'none' })
+  } else {
+    // 添加 ID
+    ids.push(currentId.value)
+    // 添加到全量列表
+    list.push(detail.value)
+    
+    isFavorite.value = true
+    uni.showToast({ title: '已收藏', icon: 'success' })
+    uni.vibrateShort()
+  }
+  
+  uni.setStorageSync('my_fav_ids', ids)
+  uni.setStorageSync('my_fav_list', list)
+}
 
 onLoad((options) => {
   if (options.id) {
     currentId.value = options.id
     fetchDetail()
+    checkFavorite()
   }
 })
 
@@ -129,6 +170,21 @@ const goBack = () => {
     transform: scale(0.92);
   }
   .header-title { color: #fff; font-size: 32rpx; font-weight: bold; }
+  
+  .fav-btn {
+    position: absolute; right: 24rpx; bottom: 12rpx;
+    width: 64rpx; height: 64rpx; border-radius: 50%;
+    background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    &.is-fav {
+      background: rgba(255, 82, 82, 0.15);
+      border-color: rgba(255, 82, 82, 0.3);
+      transform: scale(1.1);
+    }
+  }
 }
 
 .content-scroll { flex: 1; }

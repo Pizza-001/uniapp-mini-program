@@ -52,7 +52,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { billingApi } from '@/api/index.js'
 
 const currentTab = ref('valid')
 const promoCode = ref('')
@@ -62,13 +63,42 @@ const tabs = [
   { label: '已过期', val: 'expired' }
 ]
 
-const coupons = ref([
-  { val: 20, min: 200, title: '新春全场通用券', tag: '全场通用', expiry: '2026-05-20', status: 'valid', type: 'general', url: '/pages/index/index' },
-  { val: 10, min: 0, title: '无门槛购药优惠券', tag: '限药品', expiry: '2026-06-30', status: 'valid', type: 'medicine', url: '/pages/pharmacy/index' },
-  { val: 50, min: 200, title: '宠物疫苗专项券', tag: '限疫苗', expiry: '2026-04-30', status: 'valid', type: 'vaccine', url: '/pages/vaccine/index' },
-  { val: 30, min: 300, title: '宠物洗美、手术抵扣券', tag: '限美容/手术', expiry: '2026-06-15', status: 'valid', type: 'surgery', url: '/pages/appointment/index' },
-  { val: 100, min: 1000, title: '会员大额满减券', tag: '全场通用', expiry: '2026-03-15', status: 'used', type: 'general', url: '/pages/index/index' }
-])
+const coupons = ref([])
+
+const fetchCoupons = async () => {
+  try {
+    const res = await billingApi.getCoupons()
+    const now = new Date().getTime()
+    coupons.value = (res.data || []).map(uc => {
+      const validTo = uc.coupon.validTo ? new Date(uc.coupon.validTo).getTime() : null
+      let status = 'valid'
+      if (uc.useStatus === '1') status = 'used'
+      else if (validTo && validTo < now) status = 'expired'
+      
+      // 根据标题或类型做简单的映射，增加视觉区分
+      let tag = '全场通用'; let type = 'general'; let url = '/pages/index/index'
+      const title = uc.coupon.title || ''
+      if (title.includes('药')) { tag = '限药品'; type = 'medicine'; url = '/pages/pharmacy/index' }
+      else if (title.includes('疫苗')) { tag = '限疫苗'; type = 'vaccine'; url = '/pages/vaccine/index' }
+      else if (title.includes('手术') || title.includes('挂号')) { tag = '限就诊'; type = 'surgery'; url = '/pages/appointment/index' }
+
+      return {
+        val: uc.coupon.type === 'CASH' ? uc.coupon.amount : (uc.coupon.amount * 10),
+        min: uc.coupon.minSpend,
+        title: uc.coupon.title,
+        tag: tag,
+        expiry: uc.coupon.validTo ? uc.coupon.validTo.split(' ')[0] : '永久有效',
+        status: status,
+        type: type,
+        url: url,
+        id: uc.id
+      }
+    })
+  } catch (e) {
+    console.error('Fetch coupons err', e)
+  }
+}
+
 
 const filteredCoupons = computed(() => {
   return coupons.value.filter(c => c.status === currentTab.value)
@@ -76,7 +106,8 @@ const filteredCoupons = computed(() => {
 
 const useCoupon = (c) => {
   if (currentTab.value !== 'valid') return
-  if (c.url === '/pages/index/index') {
+  const tabBarPages = ['/pages/index/index', '/pages/discovery/index', '/pages/pharmacy/index', '/pages/appointment/index', '/pages/profile/index']
+  if (tabBarPages.includes(c.url)) {
     uni.switchTab({ url: c.url })
   } else {
     uni.navigateTo({ url: c.url })
@@ -91,6 +122,10 @@ const handleExchange = () => {
     uni.showToast({ title: '兑换码无效', icon: 'none' })
   }, 1000)
 }
+
+onMounted(() => {
+  fetchCoupons()
+})
 </script>
 
 <style lang="scss" scoped>

@@ -49,17 +49,37 @@
       <!-- 3. 记录列表 -->
       <view class="record-list" v-else>
         <view class="record-card animate-in-up" v-for="item in list" :key="item.reservationId" @tap="goToDetail(item)">
-          <view class="card-header">
-            <view class="type-box">
-              <view class="type-tag" :class="item.type === '疫苗预约' ? 'vaccine' : 'normal'">
-                {{ item.type || '常规门诊' }}
+          <view class="card-main-content">
+            <!-- 左侧图标/头像 -->
+            <view class="card-left">
+              <image 
+                v-if="item.photo" 
+                :src="formatImageUrl(item.photo)" 
+                mode="aspectFill" 
+                class="avatar-icon" 
+              />
+              <view v-else class="type-icon-box" :class="item.type === '疫苗预约' ? 'vaccine-bg' : 'normal-bg'">
+                <image 
+                  :src="item.type === '疫苗预约' ? '/static/icons/nav-vaccine.png' : '/static/icons/nav-appt.png'" 
+                  mode="aspectFit" 
+                  class="type-icon"
+                />
               </view>
             </view>
-            <view class="status-wrap">
-              <view class="status-dot" :style="{ background: getStatusColor(item.status) }"></view>
-              <text class="status-text" :style="{ color: getStatusColor(item.status) }">{{ formatStatus(item.status) }}</text>
-            </view>
-          </view>
+
+            <!-- 右侧信息 -->
+            <view class="card-right">
+              <view class="card-header">
+                <view class="type-box">
+                  <view class="type-tag" :class="item.type === '疫苗预约' ? 'vaccine' : 'normal'">
+                    {{ item.type || '常规门诊' }}
+                  </view>
+                </view>
+                <view class="status-wrap">
+                  <view class="status-dot" :style="{ background: getStatusColor(item.status) }"></view>
+                  <text class="status-text" :style="{ color: getStatusColor(item.status) }">{{ formatStatus(item.status) }}</text>
+                </view>
+              </view>
           
           <view class="card-body">
             <view class="info-item">
@@ -76,6 +96,9 @@
             </view>
           </view>
 
+          </view> <!-- card-right -->
+          </view> <!-- card-main-content -->
+          
           <view class="card-footer">
             <view class="actions">
               <view class="btn-outline" v-if="item.status === '0'" @tap.stop="handleCancel(item)">取消预约</view>
@@ -92,6 +115,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 import { request } from '@/api/index.js'
 
 const statusBarHeight = ref(0)
@@ -115,7 +139,7 @@ const fetchList = async () => {
       url: '/hospital/reservation/selectMyReservationList',
       method: 'GET'
     })
-    list.value = res || []
+    list.value = res.data || []
   } catch (e) {
     console.error('Fetch records failed', e)
   } finally {
@@ -129,6 +153,7 @@ const onRefresh = async () => {
   refreshing.value = false
 }
 
+// 移除手动定义的 onShow 常量，统一在生命周期钩子中调用
 const handleTab = (index) => {
   currentTab.value = index
 }
@@ -187,6 +212,9 @@ onMounted(() => {
   } catch (e) {
     statusBarHeight.value = 20
   }
+})
+
+onShow(() => {
   fetchList()
 })
 </script>
@@ -236,6 +264,28 @@ onMounted(() => {
 .record-card {
   @include premium-card;
   padding: 32rpx;
+  
+  .card-main-content {
+    display: flex; gap: 24rpx;
+  }
+  
+  .card-left {
+    flex-shrink: 0;
+    .avatar-icon {
+      width: 100rpx; height: 100rpx; border-radius: 50%; border: 4rpx solid #fff;
+      box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.08);
+    }
+    .type-icon-box {
+      width: 100rpx; height: 100rpx; border-radius: 24rpx;
+      display: flex; align-items: center; justify-content: center;
+      &.vaccine-bg { background: #E8F5E9; }
+      &.normal-bg { background: #E8EAF6; }
+      .type-icon { width: 60rpx; height: 60rpx; }
+    }
+  }
+  
+  .card-right { flex: 1; min-width: 0; }
+
   .card-header {
     display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 24rpx;

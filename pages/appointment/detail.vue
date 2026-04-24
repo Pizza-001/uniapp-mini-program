@@ -25,7 +25,7 @@
         </view>
         <view class="cost-info">
           <text class="label">基础挂号费</text>
-          <text class="val">¥{{ fee || 0 }}</text>
+          <text class="val">¥{{ fee != null ? fee : 50 }}</text>
         </view>
       </view>
 

@@ -167,21 +167,29 @@ const isFavorite = (id) => favoriteIds.value.includes(id)
 
 const toggleFavorite = (item) => {
   const ids = [...favoriteIds.value]
+  const fullFavs = uni.getStorageSync('my_fav_list') || []
   const index = ids.indexOf(item.knowledgeId)
+  
   if (index > -1) {
+    // 移除 ID
     ids.splice(index, 1)
+    // 从全量列表中移除
+    const listIndex = fullFavs.findIndex(f => f.knowledgeId === item.knowledgeId)
+    if (listIndex > -1) fullFavs.splice(listIndex, 1)
+    
     uni.showToast({ title: '已取消', icon: 'none' })
   } else {
+    // 添加 ID
     ids.push(item.knowledgeId)
-    const fullFavs = uni.getStorageSync('my_fav_list') || []
+    // 添加到全量列表
     fullFavs.push(item)
-    uni.setStorageSync('my_fav_list', fullFavs)
     uni.showToast({ title: '已收藏', icon: 'none' })
-    // 反馈震动
     uni.vibrateShort()
   }
+  
   favoriteIds.value = ids
   uni.setStorageSync('my_fav_ids', ids)
+  uni.setStorageSync('my_fav_list', fullFavs)
 }
 
 const fetchList = async () => {

@@ -1,218 +1,258 @@
 <template>
-  <view class="page">
-    <!-- 沉浸式搜索头 -->
-    <view class="pharmacy-header" :style="{ paddingTop: statusBarHeight + 'px' }">
-      <view class="header-content">
-        <text class="title">宠爱药房</text>
-        <view class="search-bar">
-          <uni-icons type="search" size="18" color="rgba(255,255,255,0.6)" />
-          <input placeholder="搜索处方药、营养品..." placeholder-style="color: rgba(255,255,255,0.4)" />
-        </view>
+  <view class="mall-page">
+    <!-- 统一沉浸式头部 -->
+    <view class="safe-header" :style="{ paddingTop: statusBarHeight + 'px' }">
+      <view class="title-bar">宠爱药房</view>
+      <view class="search-box">
+        <uni-icons type="search" size="18" color="#94A3B8" />
+        <input 
+          class="ipt" 
+          placeholder="输入药名或疾病寻找良药..." 
+          v-model="queryParams.name" 
+          @confirm="handleSearch"
+        />
       </view>
     </view>
 
-    <view class="main-body">
-      <!-- 极简侧边栏 -->
-      <view class="sidebar">
+    <!-- 主容器 -->
+    <view class="split-view">
+      <!-- 侧边栏 -->
+      <scroll-view scroll-y class="sidebar" show-scrollbar="false">
         <view 
-          class="sidebar-item" 
-          v-for="(cat, index) in categories" 
-          :key="cat"
-          :class="{ active: activeCat === index }"
-          @tap="activeCat = index"
+          class="side-nav" 
+          :class="{ active: currentCategory === '' }" 
+          @tap="switchCategory('')"
         >
-          <view class="indicator" v-if="activeCat === index" />
+          <view class="bar" v-if="currentCategory === ''"></view>
+          <uni-icons type="star-filled" size="18" :color="currentCategory === '' ? '#6366F1' : '#94A3B8'" />
+          <text>推荐</text>
+        </view>
+        <view 
+          class="side-nav" 
+          v-for="cat in categories" 
+          :key="cat"
+          :class="{ active: currentCategory === cat }" 
+          @tap="switchCategory(cat)"
+        >
+          <view class="bar" v-if="currentCategory === cat"></view>
+          <uni-icons :type="getCatIcon(cat)" size="18" :color="currentCategory === cat ? '#6366F1' : '#94A3B8'" />
           <text>{{ cat }}</text>
         </view>
-      </view>
+      </scroll-view>
 
-      <!-- 商品瀑布流 -->
-      <scroll-view scroll-y class="product-view">
-        <view class="category-banner card">
-          <view class="banner-text">
-            <text class="b-title">{{ categories[activeCat] }}专区</text>
-            <text class="b-subtitle">精选全球优质宠物医药资源</text>
-          </view>
-          <image class="banner-img" src="/static/icons/pill.png" mode="aspectFit" />
-        </view>
-
-        <view class="product-grid">
-          <view class="product-card card" v-for="item in products" :key="item.id">
-            <view class="image-area">
-              <view class="p-placeholder">
-                <uni-icons type="medallion" size="40" color="#E8EAF6" />
-              </view>
-              <view class="rx-tag" v-if="item.isRx">Rx 处方药</view>
+      <!-- 列表区 -->
+      <scroll-view 
+        scroll-y 
+        class="pro-list" 
+        refresher-enabled 
+        :refresher-triggered="isRefreshing" 
+        @refresherrefresh="onRefresh"
+      >
+        <view class="mall-grid" v-if="productList.length > 0">
+          <view class="mall-item" v-for="item in productList" :key="item.medicineId">
+            <view class="item-visual">
+              <image class="img" :src="item.image ? formatImageUrl(item.image) : '/static/images/med-01.png'" mode="aspectFit" />
+              <view class="tag" v-if="item.stock < 10">处</view>
             </view>
-            <view class="detail-area">
-              <text class="p-name">{{ item.name }}</text>
-              <text class="p-desc">{{ item.enName }} · {{ item.spec }}</text>
-              <view class="price-row">
-                <view class="price-box">
-                  <text class="unit">¥</text>
-                  <text class="num">{{ item.price }}</text>
-                </view>
-                <view class="add-btn" @tap.stop="addToCart(item)">
-                  <uni-icons type="plus-filled" size="24" color="#5C6BC0" />
+            <view class="item-detail">
+              <text class="name">{{ item.name }}</text>
+              <text class="desc">{{ item.specification }}</text>
+              <view class="footer-p">
+                <text class="price">¥{{ item.price }}</text>
+                <view class="add-cart" @tap.stop="addToCart(item)">
+                  <uni-icons type="plus-filled" size="26" color="#6366F1" />
                 </view>
               </view>
             </view>
           </view>
         </view>
-        <view class="safe-bottom" />
+        <view class="empty-state" v-if="!loading && productList.length === 0">
+          <text>药柜空空，换个分类看看吧</text>
+        </view>
+        <view class="bottom-safe-space"></view>
       </scroll-view>
     </view>
 
-    <!-- 悬浮玻璃拟态购物车 -->
-    <view class="float-cart-wrap">
-      <view class="float-cart">
-        <view class="cart-left">
-          <view class="cart-icon">
-            <uni-icons type="cart-filled" size="28" color="#5C6BC0" />
-            <view class="count-badge" v-if="cartCount > 0">{{ cartCount }}</view>
-          </view>
-          <view class="total-box">
-            <text class="label">预计合计</text>
-            <text class="price">¥{{ totalPrice }}</text>
-          </view>
-        </view>
-        <view class="checkout-btn" @tap="goCheckout">去结算</view>
+    <!-- 固定底部结算栏：吸附在 TabBar 之上 -->
+    <view class="settle-bar shadow-top">
+      <view class="total-p">
+        <text class="label">合计:</text>
+        <text class="sym">¥</text>
+        <text class="num">{{ totalPrice }}</text>
       </view>
+      <button class="settle-btn" :disabled="cartCount === 0" @tap="handleCheckout">
+        去结算 ({{ cartCount }})
+      </button>
     </view>
   </view>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { pharmacyApi, billingApi, formatImageUrl } from '@/api/index.js'
 
 const statusBarHeight = ref(0)
-const activeCat = ref(0)
-const cartCount = ref(0)
-const totalPrice = ref('0.00')
+const isRefreshing = ref(false)
+const loading = ref(true)
 
-const categories = ['热门推荐', '常规驱虫', '皮肤用药', '肠胃调理', '处方粮单']
-const products = [
-  { id: 1, name: '海乐妙 Milbemax', enName: '米尔贝肟', spec: '1片/盒', price: '45.00', isRx: true },
-  { id: 2, name: '大宠爱 Revolution', enName: '赛拉菌素', spec: '3支/盒', price: '188.00', isRx: false },
-  { id: 3, name: '博来恩 Broadline', enName: '非泼罗尼', spec: '0.9ml/支', price: '98.00', isRx: false },
-  { id: 4, name: '莫比新 Mobicine', enName: '阿莫西林', spec: '50mg*10片', price: '68.00', isRx: true },
-]
+const categories = ref([])
+const currentCategory = ref('')
+const productList = ref([])
+const cart = ref([])
 
-const addToCart = (item) => {
-  cartCount.value++
-  totalPrice.value = (parseFloat(totalPrice.value) + parseFloat(item.price)).toFixed(2)
-  uni.showToast({ title: '已加入待购清单', icon: 'none' })
+const queryParams = ref({
+  name: '',
+  type: '',
+  pageNum: 1,
+  pageSize: 50
+})
+
+const cartCount = computed(() => cart.value.reduce((acc, item) => acc + item.count, 0))
+const totalPrice = computed(() => cart.value.reduce((acc, item) => acc + (item.price * item.count), 0).toFixed(2))
+
+const fetchCategories = async () => {
+  try { const res = await pharmacyApi.getCategories(); categories.value = res.data || [] } catch (e) {}
+}
+
+const fetchProducts = async () => {
+  loading.value = true
+  try {
+    queryParams.value.type = currentCategory.value
+    const res = await pharmacyApi.getProducts(queryParams.value)
+    productList.value = res.rows || []
+  } catch (e) {
+  } finally { loading.value = false; isRefreshing.value = false }
+}
+
+const switchCategory = (cat) => { currentCategory.value = cat; fetchProducts() }
+const handleSearch = () => fetchProducts()
+const onRefresh = () => { isRefreshing.value = true; fetchProducts() }
+
+const addToCart = (product) => {
+  const index = cart.value.findIndex(item => item.medicineId === product.medicineId)
+  if (index > -1) cart.value[index].count++
+  else cart.value.push({ ...product, count: 1 })
+}
+
+const handleCheckout = async () => {
+  if (cart.value.length === 0) return
+  uni.showLoading({ title: '收银台加载中...', mask: true })
+  try {
+    const billingData = {
+      orderNo: 'MED' + Date.now(),
+      businessType: 'MEDICINE',
+      totalAmount: totalPrice.value
+    }
+    const res = await billingApi.createBilling(billingData)
+    const billingId = res.data.id
+
+    const data = encodeURIComponent(JSON.stringify({
+      billingId: billingId,
+      items: cart.value
+    }))
+    
+    uni.navigateTo({ url: `/pages/pharmacy/checkout?data=${data}` })
+    cart.value = []
+  } catch (e) {
+    uni.showToast({ title: '跳转失败，请检查网络', icon: 'none' })
+  } finally { uni.hideLoading() }
+}
+
+const getCatIcon = (cat) => {
+  if (cat.includes('驱虫')) return 'smallcircle-filled'
+  if (cat.includes('护理')) return 'heart-filled'
+  if (cat.includes('营养')) return 'shop-filled'
+  return 'list'
 }
 
 onMounted(() => {
   statusBarHeight.value = uni.getSystemInfoSync().statusBarHeight
+  fetchCategories()
+  fetchProducts()
 })
 </script>
 
 <style lang="scss" scoped>
-.page { background: $bg-main; height: 100vh; display: flex; flex-direction: column; }
+.mall-page {
+  background: #F8FAFC; height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+}
 
-.pharmacy-header {
-  background: $primary-grad;
-  padding: 20rpx 40rpx 40rpx;
-  .header-content {
-    .title { font-size: 40rpx; font-weight: 800; color: #fff; margin-bottom: 30rpx; display: block; }
-    .search-bar {
-      @include glass-morphism;
-      height: 80rpx; border-radius: 20rpx; padding: 0 30rpx;
-      display: flex; align-items: center; gap: 20rpx;
-      input { flex: 1; font-size: 26rpx; color: #fff; }
-    }
+.safe-header {
+  background: #fff; padding: 20rpx 40rpx 30rpx;
+  .title-bar { 
+    text-align: center; font-size: 34rpx; font-weight: 900; color: #1E293B; margin-bottom: 20rpx;
+  }
+  .search-box {
+    height: 84rpx; background: #F1F5F9; border-radius: 20rpx;
+    display: flex; align-items: center; padding: 0 30rpx; gap: 20rpx;
+    .ipt { flex: 1; font-size: 28rpx; color: #1E293B; }
   }
 }
 
-.main-body { flex: 1; display: flex; overflow: hidden; }
+.split-view {
+  flex: 1; display: flex; overflow: hidden;
+}
 
 .sidebar {
-  width: 170rpx; background: rgba(92, 107, 192, 0.03);
-  .sidebar-item {
-    height: 120rpx; display: flex; align-items: center; justify-content: center; position: relative;
-    text { font-size: 26rpx; color: $text-sub; transition: all 0.3s; }
+  width: 160rpx; background: #F8FAFC;
+  .side-nav {
+    padding: 36rpx 0; display: flex; flex-direction: column; align-items: center; gap: 8rpx;
+    position: relative; color: #94A3B8; font-size: 24rpx; font-weight: 700;
     &.active {
-      background: #fff;
-      text { color: $primary; font-weight: 800; transform: scale(1.1); }
-      .indicator { position: absolute; left: 0; width: 8rpx; height: 40rpx; background: $primary; border-radius: 0 4rpx 4rpx 0; }
-    }
-  }
-}
-
-.product-view { flex: 1; padding: 30rpx; }
-
-.card { @include premium-card; }
-
-.category-banner {
-  background: linear-gradient(135deg, $primary-light, #fff);
-  padding: 30rpx; display: flex; align-items: center; justify-content: space-between;
-  .b-title { font-size: 30rpx; font-weight: 800; color: $primary-dark; display: block; }
-  .b-subtitle { font-size: 20rpx; color: $text-sub; }
-  .banner-img { width: 100rpx; height: 100rpx; opacity: 0.6; }
-}
-
-.product-grid { display: flex; flex-direction: column; gap: 30rpx; }
-
-.product-card {
-  display: flex; gap: 30rpx; padding: 24rpx;
-  .image-area {
-    width: 180rpx; height: 180rpx; background: $bg-main; border-radius: 24rpx;
-    position: relative; overflow: hidden; flex-shrink: 0;
-    .p-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-    .rx-tag {
-      position: absolute; top: 0; left: 0; background: $accent; color: #fff;
-      font-size: 16rpx; font-weight: 700; padding: 4rpx 12rpx; border-radius: 0 0 16rpx 0;
-    }
-  }
-  .detail-area {
-    flex: 1; display: flex; flex-direction: column;
-    .p-name { font-size: 28rpx; font-weight: 800; color: $text-main; margin-bottom: 8rpx; }
-    .p-desc { font-size: 22rpx; color: $text-hint; margin-bottom: 20rpx; }
-    .price-row {
-      margin-top: auto; display: flex; justify-content: space-between; align-items: center;
-      .price-box {
-        display: flex; align-items: baseline; color: $accent;
-        .unit { font-size: 20rpx; font-weight: 700; }
-        .num { font-size: 36rpx; font-weight: 900; }
+      background: #fff; color: #6366F1;
+      .bar {
+        position: absolute; left: 0; top: 35%; height: 30%; width: 6rpx;
+        background: #6366F1; border-radius: 0 4rpx 4rpx 0;
       }
     }
   }
 }
 
-.float-cart-wrap {
-  position: fixed; bottom: calc(env(safe-area-inset-bottom) + 120rpx);
-  left: 40rpx; right: 40rpx; z-index: 99;
-  .float-cart {
-    @include glass-morphism;
-    height: 110rpx; border-radius: 100rpx; padding: 0 10rpx 0 40rpx;
-    display: flex; align-items: center; justify-content: space-between;
-    box-shadow: 0 20rpx 40rpx rgba(0,0,0,0.1);
-    
-    .cart-left {
-      display: flex; align-items: center; gap: 30rpx;
-      .cart-icon {
-        position: relative;
-        .count-badge {
-          position: absolute; top: -10rpx; right: -10rpx; background: $accent; color: #fff;
-          font-size: 18rpx; min-width: 32rpx; height: 32rpx; border-radius: 50%;
-          display: flex; align-items: center; justify-content: center; border: 4rpx solid #fff;
-        }
-      }
-      .total-box {
-        display: flex; flex-direction: column;
-        .label { font-size: 20rpx; color: $text-hint; }
-        .price { font-size: 36rpx; font-weight: 900; color: $primary-dark; }
-      }
-    }
-    
-    .checkout-btn {
-      @include action-button($primary-grad);
-      height: 90rpx; padding: 0 50rpx; font-size: 30rpx;
+.pro-list { flex: 1; background: #fff; padding: 24rpx; box-sizing: border-box; }
+
+.mall-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24rpx; }
+
+.mall-item {
+  background: #fff; border-radius: 20rpx; border: 1rpx solid #F1F5F9; overflow: hidden;
+  .item-visual {
+    height: 200rpx; background: #F8FAFC; display: flex; align-items: center; justify-content: center; position: relative;
+    .img { width: 130rpx; height: 130rpx; }
+    .tag { position: absolute; top: 0; right: 0; background: #F43F5E; color: #fff; font-size: 18rpx; padding: 4rpx 8rpx; border-bottom-left-radius: 12rpx; }
+  }
+  .item-detail {
+    padding: 16rpx;
+    .name { font-size: 26rpx; font-weight: 800; color: #1E293B; line-height: 1.3; height: 68rpx; overflow: hidden; display: block; }
+    .desc { font-size: 20rpx; color: #94A3B8; margin: 8rpx 0 16rpx; display: block; }
+    .footer-p {
+      display: flex; justify-content: space-between; align-items: center;
+      .price { font-size: 30rpx; font-weight: 900; color: #F43F5E; }
     }
   }
 }
 
-.safe-bottom { height: 200rpx; }
+.settle-bar {
+  position: fixed; left: 0; right: 0; 
+  bottom: var(--window-bottom); // 吸附在 TabBar 之上 (重要修复)
+  background: #fff; padding: 20rpx 40rpx;
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1rpx solid #F1F5F9; z-index: 999;
+  
+  .total-p {
+    display: flex; align-items: baseline;
+    .label { font-size: 26rpx; color: #64748B; font-weight: 700; margin-right: 10rpx; }
+    .sym { color: #F43F5E; font-size: 24rpx; font-weight: 800; }
+    .num { color: #F43F5E; font-size: 40rpx; font-weight: 900; margin-left: 4rpx; }
+  }
+  
+  .settle-btn {
+    width: 240rpx; height: 88rpx; line-height: 88rpx; background: #FF4D4F;
+    color: #fff; border-radius: 44rpx; font-size: 28rpx; font-weight: 800; margin: 0;
+    box-shadow: 0 10rpx 20rpx rgba(255, 77, 79, 0.2);
+    &[disabled] { opacity: 0.5; box-shadow: none; }
+  }
+}
+
+.empty-state { text-align: center; padding-top: 100rpx; color: #94A3B8; font-size: 26rpx; }
+.bottom-safe-space { height: 120rpx; }
+.shadow-top { box-shadow: 0 -10rpx 30rpx rgba(0,0,0,0.03); }
 </style>

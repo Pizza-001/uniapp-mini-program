@@ -7,7 +7,7 @@
       <view class="header-main" :style="{ paddingRight: menuButtonWidth + 'px' }">
         <view class="user-box">
           <view class="avatar-wrap">
-             <image class="avatar" src="/static/icons/profile.png" mode="aspectFill" />
+             <image class="avatar" :src="userInfo && userInfo.avatar ? formatImageUrl(userInfo.avatar) : '/static/icons/profile.png'" mode="aspectFill" />
              <view class="online-status"></view>
           </view>
           <view class="user-text">
@@ -19,7 +19,12 @@
 
       <view class="search-box">
         <uni-icons type="search" size="18" color="rgba(255,255,255,0.8)" />
-        <input placeholder="搜索名医、疫苗、健康百科..." placeholder-class="search-ph" />
+        <input 
+          v-model="searchText"
+          placeholder="搜索养宠知识、绝育指南..." 
+          placeholder-class="search-ph" 
+          @confirm="handleSearch"
+        />
       </view>
     </view>
 
@@ -115,16 +120,26 @@
         <view class="safe-bottom"></view>
       </view>
     </scroll-view>
+    
+    <!-- AI 悬浮问诊按钮 -->
+    <view class="ai-fab" @tap="handleNav('/pages/ai/index')">
+      <view class="ai-fab-content">
+        <image class="ai-icon" src="/static/images/ai-consult.png" mode="aspectFit" />
+        <text class="ai-text">AI问诊</text>
+      </view>
+    </view>
   </view>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 import { homeApi, hospitalApi, apptApi, userApi, formatImageUrl } from '@/api/index.js'
 
 const statusBarHeight = ref(0)
 const menuButtonWidth = ref(0)
 const userInfo = ref(null)
+const searchText = ref('')
 
 const bannerList = ref([])
 const topDoctors = ref([])
@@ -147,6 +162,13 @@ const handleNav = (path) => {
   } else {
     uni.navigateTo({ url: path })
   }
+}
+
+const handleSearch = () => {
+  if (!searchText.value) return
+  uni.navigateTo({
+    url: `/pages/knowledge/index?keyword=${encodeURIComponent(searchText.value)}`
+  })
 }
 
 const goToKnowledge = (news) => {
@@ -190,10 +212,13 @@ onMounted(() => {
   menuButtonWidth.value = sys.windowWidth - menu.left + 10
   // #endif
 
+  fetchBackendData()
+})
+
+onShow(() => {
   if (uni.getStorageSync('token')) {
     getUserInfo()
   }
-  fetchBackendData()
 })
 </script>
 
@@ -338,4 +363,61 @@ onMounted(() => {
 }
 
 .safe-bottom { height: 180rpx; }
+
+/* AI 悬浮按钮样式 */
+.ai-fab {
+  position: fixed;
+  right: 40rpx;
+  bottom: 220rpx; /* 避开 tabBar */
+  width: 140rpx;
+  height: 140rpx;
+  z-index: 999;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -10rpx;
+    left: -10rpx;
+    right: -10rpx;
+    bottom: -10rpx;
+    background: radial-gradient(circle, rgba(92, 107, 192, 0.4) 0%, rgba(92, 107, 192, 0) 70%);
+    border-radius: 50%;
+    animation: fab-pulse 2s infinite;
+  }
+}
+
+.ai-fab-content {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12rpx 32rpx rgba(74, 86, 157, 0.2);
+  border: 2rpx solid rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(15px);
+  position: relative;
+  overflow: hidden;
+  
+  .ai-icon {
+    width: 70rpx;
+    height: 70rpx;
+    margin-bottom: 2rpx;
+  }
+  
+  .ai-text {
+    font-size: 20rpx;
+    color: #4A569D;
+    font-weight: 900;
+  }
+}
+
+
+@keyframes fab-pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 0.4; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
 </style>

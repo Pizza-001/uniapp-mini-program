@@ -81,6 +81,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
 import { hospitalApi, formatImageUrl } from '@/api/index.js'
 
 const list = ref([])
@@ -151,6 +152,13 @@ const stripHtml = (html) => {
 }
 
 onMounted(() => fetchData())
+
+onLoad((options) => {
+  if (options.keyword) {
+    queryParams.title = options.keyword
+    fetchData(true)
+  }
+})
 </script>
 
 <style lang="scss">
